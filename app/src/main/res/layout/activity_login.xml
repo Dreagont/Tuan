@@ -7,12 +7,11 @@
     android:padding="18dp"
     android:orientation="vertical"
     tools:context=".LoginActivity">
-    <ImageView
+    <Button
         android:layout_width="25dp"
         android:layout_height="25dp"
-        android:clickable="true"
         android:id="@+id/btnBackSplash"
-        android:src="@drawable/back_icon"/>
+        android:background="@drawable/back_icon"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -28,7 +27,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:id="@+id/txtUsername"
-        android:textColorHint="#1D000000"
+        android:textColorHint="#54000000"
         android:hint="Enter your email or username"/>
 
     <TextView
@@ -45,7 +44,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:id="@+id/txtPassword"
-        android:textColorHint="#1D000000"
+        android:textColorHint="#54000000"
         android:hint="Enter your password"/>
 
     <Button

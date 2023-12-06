@@ -7,12 +7,28 @@
     android:padding="18dp"
     android:orientation="vertical"
     tools:context=".RegisterActivity">
-    <ImageView
+    <Button
         android:layout_width="25dp"
         android:layout_height="25dp"
-        android:clickable="true"
         android:id="@+id/btnBackSplash"
-        android:src="@drawable/back_icon"/>
+        android:background="@drawable/back_icon"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="User name"
+        android:textColor="@color/black"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="3dp"
+        android:textSize="13dp"
+        android:textAllCaps="true"/>
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:id="@+id/txtUsername"
+        android:textColorHint="#54000000"
+        android:hint="Enter user name"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -27,8 +43,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:id="@+id/txtUsername"
-        android:textColorHint="#1D000000"
+        android:id="@+id/txtEmail"
+        android:textColorHint="#54000000"
         android:hint="Enter your email"/>
 
     <TextView
@@ -45,7 +61,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:id="@+id/txtPhone"
-        android:textColorHint="#1D000000"
+        android:textColorHint="#54000000"
         android:hint="Enter your phone number"/>
 
     <TextView
@@ -62,7 +78,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:id="@+id/txtPassword"
-        android:textColorHint="#1D000000"
+        android:textColorHint="#54000000"
         android:inputType="textPassword"
         android:hint="Enter your password"/>
     <TextView
@@ -79,7 +95,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:id="@+id/txtConfirmPassword"
-        android:textColorHint="#1D000000"
+        android:textColorHint="#54000000"
         android:inputType="textPassword"
         android:hint="Re-enter your password"/>
 

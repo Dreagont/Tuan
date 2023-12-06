@@ -41,7 +41,7 @@
         android:text="Sign up for free"
         android:textAllCaps="false"
         android:textColor="@color/white"
-        android:id="@+id/btnOpenRegister"
+        android:id="@+id/btnRegister"
         />
     <Button
         android:layout_marginTop="8dp"
@@ -50,6 +50,6 @@
         android:text="Or log in"
         android:textAllCaps="false"
         android:background="@drawable/trans_button_layout"
-        android:id="@+id/btnOpenLogin"
+        android:id="@+id/btnLogin"
         />
 </LinearLayout>
