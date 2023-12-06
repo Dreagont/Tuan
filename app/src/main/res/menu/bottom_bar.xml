@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:title="Home"
+        android:id="@+id/homeTab"
+        android:icon="@drawable/home_icon">
+
+    </item>
+    <item
+        android:title="Topics"
+        android:id="@+id/topicTab"
+        android:icon="@drawable/public_course_icon">
+
+    </item>
+
+    <item
+        android:title=""
+        android:id="@+id/add"
+        android:icon="@drawable/add_icon">
+    </item>
+    <item
+        android:title="Library"
+        android:id="@+id/libTab"
+        android:icon="@drawable/lib_icon">
+    </item>
+    <item
+        android:title="Profile"
+        android:id="@+id/profileTab"
+        android:icon="@drawable/profile_icon">
+    </item>
+
+
+</menu>
