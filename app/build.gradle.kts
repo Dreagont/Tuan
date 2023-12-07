@@ -58,4 +58,6 @@ dependencies {
     implementation("com.google.firebase:firebase-analytics")
     implementation ("com.sun.mail:android-mail:1.6.6")
     implementation ("com.sun.mail:android-activation:1.6.7")
+    implementation ("androidx.cardview:cardview:1.0.0")
+
 }
