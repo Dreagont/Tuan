@@ -197,7 +197,7 @@
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:src="@drawable/right_arrow_icon"
-            android:alpha="0.4f"
+            android:alpha="0.4"
             android:clickable="true"
             android:id="@+id/btnAnswerOption"
             />
