@@ -4,25 +4,32 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
+import com.google.firebase.auth.FirebaseAuth
 
 class SplashActivity : AppCompatActivity() {
-    private lateinit var btnSignUp: Button
-    private lateinit var btnLogIn: Button
+    private lateinit var signUpButton: Button
+    private lateinit var loginButton: Button
+
+    private lateinit var auth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
 
-        btnSignUp = findViewById(R.id.btnRegister)
-        btnLogIn = findViewById(R.id.btnLogin)
+        signUpButton = findViewById(R.id.btnRegister)
+        loginButton = findViewById(R.id.btnLogin)
+        auth = FirebaseAuth.getInstance()
 
-        btnSignUp.setOnClickListener {
-            startActivity(Intent(this@SplashActivity, RegisterActivity::class.java))
+        if (auth.currentUser != null) {
+            startActivity(Intent(this, MainActivity::class.java))
             finish()
         }
-        btnLogIn.setOnClickListener {
-            startActivity(Intent(this@SplashActivity, LoginActivity::class.java))
-            finish()
+
+        signUpButton.setOnClickListener {
+            startActivity(Intent(this, RegisterActivity::class.java))
+        }
+        loginButton.setOnClickListener {
+            startActivity(Intent(this, LoginActivity::class.java))
         }
     }
 }

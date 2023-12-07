@@ -1,7 +1,6 @@
 package com.example.quizletfinal.models
 
-data class Word(
+data class Card(
     val english: String,
     val vietnamese: String,
-    val status: String
 )

@@ -1,12 +1,15 @@
 package com.example.quizletfinal
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
+import android.widget.Button
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
-import com.example.quizletfinal.TopicFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.bottomsheet.BottomSheetDialog
 
 class MainActivity : AppCompatActivity() {
     private lateinit var mainFragment: MainFragment
@@ -38,10 +41,31 @@ class MainActivity : AppCompatActivity() {
                 R.id.topicTab -> switchFragment(topicFragment)
                 R.id.libTab -> switchFragment(libraryFragment)
                 R.id.profileTab -> switchFragment(profileFragment)
+                R.id.add -> showAddDialog()
             }
             true
         }
     }
+
+    private fun showAddDialog() {
+        val view: View = layoutInflater.inflate(R.layout.add_dialog, null)
+        val dialog = BottomSheetDialog(this)
+        dialog.setContentView(view)
+        dialog.show()
+
+        val addFolder = dialog.findViewById<Button>(R.id.btnAddFolder)
+        val addTopic = dialog.findViewById<Button>(R.id.btnAddTopic)
+
+        addFolder?.setOnClickListener {
+            startActivity(Intent(this, AddFolderActivity::class.java))
+            dialog.dismiss()
+        }
+        addTopic?.setOnClickListener {
+            startActivity(Intent(this, AddTopicActivity::class.java))
+            dialog.dismiss()
+        }
+    }
+
     private fun switchFragment(fragment: Fragment) {
         val transaction: FragmentTransaction = fragmentManager.beginTransaction()
         if (!fragment.isAdded) {
@@ -51,4 +75,6 @@ class MainActivity : AppCompatActivity() {
         }
         activeFragment = fragment
     }
+
+
 }

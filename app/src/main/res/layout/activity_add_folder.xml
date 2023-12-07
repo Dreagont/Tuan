@@ -7,10 +7,10 @@
     android:orientation="vertical"
     android:padding="18dp"
     tools:context=".AddFolderActivity">
-    <ImageView
+    <Button
         android:layout_width="25dp"
         android:layout_height="25dp"
-        android:src="@drawable/close_icon"
+        android:background="@drawable/close_icon"
         android:layout_gravity="end"
         android:id="@+id/btnClose"/>
 

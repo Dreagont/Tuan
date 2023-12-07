@@ -6,10 +6,10 @@
     android:orientation="vertical"
     android:padding="18dp"
     tools:context=".AddTopicActivity">
-    <ImageView
+    <Button
         android:layout_width="25dp"
         android:layout_height="25dp"
-        android:src="@drawable/close_icon"
+        android:background="@drawable/close_icon"
         android:layout_gravity="end"
         android:id="@+id/btnClose"/>
     <TextView
@@ -22,7 +22,7 @@
         />
 
     <EditText
-        android:id="@+id/topicName"
+        android:id="@+id/topicTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint='Enter a topic title, like "Household items"'
@@ -109,17 +109,19 @@
                 android:layout_height="wrap_content"
                 android:textColor="#E91E63"
                 android:textSize="20dp"
-                android:text="List of words"/>
-            <androidx.recyclerview.widget.RecyclerView
+                android:text="List of cards"/>
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                tools:listitem="@layout/words_display_layout"
-                android:id="@+id/wordRecycle">
-            </androidx.recyclerview.widget.RecyclerView>
+                android:orientation="vertical"
+                android:id="@+id/container">
+                <include layout="@layout/topic_card"/>
+                <include layout="@layout/topic_card"/>
+            </LinearLayout>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/btnOpenAddWord"
+                android:id="@+id/btnAddCard"
                 android:textSize="20dp"
                 android:textColor="@color/black"
                 android:layout_marginTop="8dp"
@@ -138,7 +140,4 @@
         </LinearLayout>
 
     </ScrollView>
-
-
-
 </LinearLayout >

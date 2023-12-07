@@ -7,9 +7,9 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.quizletfinal.R
-import com.example.quizletfinal.models.Word
+import com.example.quizletfinal.models.Card
 
-class WordAdapter(private val context: Context, private val wordList: List<Word>) :
+class WordAdapter(private val context: Context, private val wordList: List<Card>) :
     RecyclerView.Adapter<WordAdapter.ViewHolder>() {
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -18,7 +18,7 @@ class WordAdapter(private val context: Context, private val wordList: List<Word>
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(context).inflate(R.layout.words_display_layout, parent, false)
+        val view = LayoutInflater.from(context).inflate(R.layout.topic_card, parent, false)
         return ViewHolder(view)
     }
 
