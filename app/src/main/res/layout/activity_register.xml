@@ -50,23 +50,6 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Phone number"
-        android:textColor="@color/black"
-        android:layout_marginTop="10dp"
-        android:layout_marginLeft="3dp"
-        android:textSize="13dp"
-        android:textAllCaps="true"/>
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:id="@+id/txtPhone"
-        android:textColorHint="#54000000"
-        android:hint="Enter your phone number"/>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:text="Password"
         android:textColor="@color/black"
         android:layout_marginTop="10dp"

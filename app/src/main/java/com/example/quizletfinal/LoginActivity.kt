@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
+import android.widget.LinearLayout
 import android.widget.Toast
 import com.example.quizletfinal.models.User
 import com.google.firebase.auth.FirebaseAuth
@@ -20,6 +21,7 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var passWord: EditText
     private lateinit var btnLogin: Button
     private lateinit var btnBack: Button
+    private lateinit var btnForget: LinearLayout
 
     private lateinit var auth: FirebaseAuth
     private lateinit var databaseReference: DatabaseReference
@@ -31,6 +33,7 @@ class LoginActivity : AppCompatActivity() {
         passWord = findViewById(R.id.txtPassword)
         btnLogin = findViewById(R.id.btnLogin)
         btnBack = findViewById(R.id.btnBackSplash)
+        btnForget = findViewById(R.id.btnForgotPassword)
 
         auth = FirebaseAuth.getInstance()
         databaseReference = FirebaseDatabase.getInstance().reference.child("Users")
@@ -45,10 +48,13 @@ class LoginActivity : AppCompatActivity() {
             startActivity(Intent(this@LoginActivity, SplashActivity::class.java))
             finish()
         }
+        btnForget.setOnClickListener {
+            startActivity(Intent(this@LoginActivity, ForgotPasswordActivity::class.java))
+            finish()
+        }
     }
-
     private fun loginUser() {
-        val email = userName.text.toString().trim() // Assuming this EditText is for email
+        val email = userName.text.toString().trim()
         val password = passWord.text.toString().trim()
 
         if (email.isEmpty() || password.isEmpty()) {
@@ -69,18 +75,14 @@ class LoginActivity : AppCompatActivity() {
                         Toast.makeText(this@LoginActivity, "Please verify your email!", Toast.LENGTH_SHORT).show()
                     }
                 } else {
-                    Toast.makeText(this@LoginActivity, "Authentication failed: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@LoginActivity, "${task.exception?.message}", Toast.LENGTH_SHORT).show()
                 }
             }
     }
-
     private fun saveUserData(firebaseUser: FirebaseUser) {
         val sharedPreferences = getSharedPreferences("UserDetails", MODE_PRIVATE)
         val editor = sharedPreferences.edit()
         editor.putString("Email", firebaseUser.email)
         editor.apply()
     }
-
-
-
 }
