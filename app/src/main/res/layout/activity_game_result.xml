@@ -59,129 +59,177 @@
         android:layout_height="3dp"
         android:background="#20000000" />
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="18dp"
-        android:orientation="vertical">
+        android:layout_height="match_parent">
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="5dp"
-            android:gravity="center"
-            android:orientation="horizontal"
-            >
+            android:layout_height="match_parent"
+            android:padding="18dp"
+            android:orientation="vertical">
             <LinearLayout
-                android:layout_width="0dp"
-                android:layout_weight="1"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="5dp"
-                android:orientation="vertical">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="You're learning!"
-                    android:textColor="@color/black"
-                    android:textSize="22dp"
-                    android:textStyle="bold"
-                    />
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Next, practice your missed terms with Learn until you've gotten them right."
-                    android:textSize="15dp"
-                    android:layout_marginTop="5dp"
-                    android:textColor="@color/black"
-                    />
-            </LinearLayout>
-            <ImageView
-                android:layout_width="70dp"
-                android:layout_height="70dp"
-                android:src="@drawable/congrats_icon"/>
-        </LinearLayout>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Your results"
-            android:textSize="15dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="20dp"
-            android:textStyle="bold"
-            />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:orientation="horizontal"
-            >
-            <com.example.quizletfinal.CircleChartView
-                android:id="@+id/circleChartView"
-                android:layout_width="150dp"
-                android:layout_height="150dp"
-                android:layout_centerInParent="true"/>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="15dp"
-                android:layout_gravity="center"
-                android:orientation="vertical"
+                android:gravity="center"
+                android:orientation="horizontal"
                 >
                 <LinearLayout
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    >
+                    android:padding="5dp"
+                    android:orientation="vertical">
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="20dp"
-                        android:textColor="#61FB0D"
-                        android:text="Correct: "
-                        />
-                    <View
-                        android:layout_width="0dp"
-                        android:layout_height="0dp"
-                        android:layout_weight="1"
+                        android:text="You're learning!"
+                        android:textColor="@color/black"
+                        android:textSize="22dp"
+                        android:textStyle="bold"
                         />
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="20dp"
-                        android:textColor="#61FB0D"
-                        android:id="@+id/txtCorrectCount"
-                        android:text="10"/>
+                        android:text="Next, practice your missed terms with Learn until you've gotten them right."
+                        android:textSize="15dp"
+                        android:layout_marginTop="5dp"
+                        android:textColor="@color/black"
+                        />
                 </LinearLayout>
+                <ImageView
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
+                    android:src="@drawable/congrats_icon"/>
+            </LinearLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Your results"
+                android:textSize="15dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="20dp"
+                android:textStyle="bold"
+                />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:orientation="horizontal"
+                >
+                <com.example.quizletfinal.CircleChartView
+                    android:id="@+id/circleChartView"
+                    android:layout_width="150dp"
+                    android:layout_height="150dp"
+                    android:layout_centerInParent="true"/>
+
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:orientation="horizontal"
+                    android:layout_marginLeft="15dp"
+                    android:layout_gravity="center"
+                    android:orientation="vertical"
                     >
-                    <TextView
+                    <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="20dp"
-                        android:textColor="#FB0D0D"
-                        android:text="Incorrect: "
-                        />
-                    <View
-                        android:layout_width="0dp"
-                        android:layout_height="0dp"
-                        android:layout_weight="1"
-                        />
-                    <TextView
+                        android:orientation="horizontal"
+                        >
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="20dp"
+                            android:textColor="#61FB0D"
+                            android:text="Correct: "
+                            />
+                        <View
+                            android:layout_width="0dp"
+                            android:layout_height="0dp"
+                            android:layout_weight="1"
+                            />
+
+                        <TextView
+                            android:id="@+id/txtCorrectCount"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:text="10"
+                            android:textColor="#61FB0D"
+                            android:textSize="20dp" />
+                    </LinearLayout>
+                    <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="20dp"
-                        android:textColor="#FB0D0D"
-                        android:id="@+id/txtIncorrectCount"
-                        android:text="10"/>
+                        android:layout_marginTop="10dp"
+                        android:orientation="horizontal"
+                        >
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="20dp"
+                            android:textColor="#FB0D0D"
+                            android:text="Incorrect: "
+                            />
+                        <View
+                            android:layout_width="0dp"
+                            android:layout_height="0dp"
+                            android:layout_weight="1"
+                            />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="20dp"
+                            android:textColor="#FB0D0D"
+                            android:id="@+id/txtIncorrectCount"
+                            android:text="10"/>
+                    </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Next steps"
+                android:textStyle="bold"
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="20dp"
+                />
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:id="@+id/reDo"
+                android:text="Practice missed terms"
+                android:textAllCaps="false"
+                android:background="@drawable/blue_button_layout"
+                android:textColor="@color/white"
+                />
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:id="@+id/reDoAll"
+                android:text="Take a new test"
+                android:textAllCaps="false"
+                android:background="@drawable/trans_button_layout"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Your answers"
+                android:textStyle="bold"
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="20dp"
+                />
+
+            <ListView
+                android:layout_width="match_parent"
+                android:layout_marginTop="10dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/reviewList"
+                tools:listitem="@layout/card_review_layout"
+                />
         </LinearLayout>
 
-
-    </LinearLayout>
+    </ScrollView>
 </LinearLayout>
