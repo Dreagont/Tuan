@@ -27,19 +27,26 @@ class AddFolderActivity : AppCompatActivity() {
             finish()
         }
 
-        addButton.setOnClickListener { addFolder() }
+        val username = intent.getStringExtra("username")
+
+        addButton.setOnClickListener {
+            if (username != null) {
+                addFolder(username)
+            }
+        }
     }
-    private fun addFolder() {
+    private fun addFolder(username: String) {
         val folderName = folderNameEditText.text.toString()
         val folderDescription = folderDescriptionEditText .text.toString()
 
         if (folderName.isNotEmpty() && folderDescription.isNotEmpty()){
-            val databaseReference = FirebaseDatabase.getInstance().getReference("folders")
+            val databaseReference = FirebaseDatabase.getInstance().getReference("users").child(username).child("folders")
             val folderId = databaseReference.push().key
             val folder = Folder(folderId!!, folderName, folderDescription)
 
             databaseReference.child(folderId).setValue(folder)
                 .addOnSuccessListener {
+                    Toast.makeText(this, "Add folder successfully", Toast.LENGTH_SHORT).show()
                     finish()
                 }
                 .addOnFailureListener {

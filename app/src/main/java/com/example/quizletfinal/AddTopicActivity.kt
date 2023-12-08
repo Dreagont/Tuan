@@ -35,11 +35,18 @@ class AddTopicActivity : AppCompatActivity() {
         cardContainer = findViewById(R.id.container)
         submitButton = findViewById(R.id.btnAddTopic)
 
+        val username = intent.getStringExtra("username")
+
         closeButton.setOnClickListener { finish() }
 
         addCardTextView.setOnClickListener { addCard() }
 
-        submitButton.setOnClickListener { addTopic() }
+        submitButton.setOnClickListener {
+            if (username != null)
+            {
+                addTopic(username)
+            }
+        }
 
     }
 
@@ -48,7 +55,7 @@ class AddTopicActivity : AppCompatActivity() {
         cardContainer.addView(boxView)
     }
 
-    private fun addTopic() {
+    private fun addTopic(username : String) {
         val title = topicTitleEditText.text.toString()
         val description = topicDescriptionEditText.text.toString()
         val selectedRadioButtonId = visibilityRadioGroup.checkedRadioButtonId
@@ -76,10 +83,10 @@ class AddTopicActivity : AppCompatActivity() {
                 }
 
                 if (cardMap.size >= 2) {
-                    val topicId = FirebaseDatabase.getInstance().getReference("topics").push().key ?: return
+                    val topicId = FirebaseDatabase.getInstance().getReference("users").child(username).child("topics").push().key ?: return
                     val newTopic = Topic(topicId, title, description, visibility, null, cardMap)
 
-                    saveTopic(newTopic)
+                    saveTopic(newTopic, username)
                 } else {
                     Toast.makeText(this, "Please fill out at least two topics", Toast.LENGTH_SHORT).show()
                 }
@@ -87,8 +94,8 @@ class AddTopicActivity : AppCompatActivity() {
         }
     }
 
-    private fun saveTopic(topic: Topic) {
-        val databaseReference = FirebaseDatabase.getInstance().getReference("topics")
+    private fun saveTopic(topic: Topic, username: String) {
+        val databaseReference = FirebaseDatabase.getInstance().getReference("users").child(username).child("topics")
 
         databaseReference.child(topic.id).setValue(topic)
             .addOnSuccessListener {

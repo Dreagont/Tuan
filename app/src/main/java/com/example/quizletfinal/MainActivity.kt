@@ -5,11 +5,13 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.firebase.auth.FirebaseAuth
 
 class MainActivity : AppCompatActivity() {
     private lateinit var mainFragment: MainFragment
@@ -29,6 +31,8 @@ class MainActivity : AppCompatActivity() {
         profileFragment = ProfileFragment()
         activeFragment = mainFragment
         fragmentManager = supportFragmentManager
+
+        val username: String? = FirebaseAuth.getInstance().currentUser?.email
 
         val transaction: FragmentTransaction = fragmentManager.beginTransaction()
         transaction.replace(R.id.mainFrame, mainFragment)
@@ -57,11 +61,16 @@ class MainActivity : AppCompatActivity() {
         val addTopic = dialog.findViewById<Button>(R.id.btnAddTopic)
 
         addFolder?.setOnClickListener {
-            startActivity(Intent(this, AddFolderActivity::class.java))
+            val intent = Intent(this, AddFolderActivity::class.java)
+            intent.putExtra("username", FirebaseAuth.getInstance().currentUser?.email?.split("@")?.get(0))
+            startActivity(intent)
             dialog.dismiss()
         }
+
         addTopic?.setOnClickListener {
-            startActivity(Intent(this, AddTopicActivity::class.java))
+            val intent = Intent(this, AddTopicActivity::class.java)
+            intent.putExtra("username", FirebaseAuth.getInstance().currentUser?.email?.split("@")?.get(0))
+            startActivity(intent)
             dialog.dismiss()
         }
     }
