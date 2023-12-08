@@ -28,11 +28,11 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "17"
     }
 
     packagingOptions{
@@ -60,4 +60,7 @@ dependencies {
     implementation ("com.sun.mail:android-activation:1.6.7")
     implementation ("androidx.cardview:cardview:1.0.0")
     implementation ("de.hdodenhof:circleimageview:3.1.0")
+    implementation ("com.opencsv:opencsv:5.5")
+    implementation("commons-io:commons-io:2.11.0")
+
 }

@@ -5,12 +5,15 @@ import android.animation.AnimatorSet
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.speech.tts.TextToSpeech
+import android.util.Log
 import android.widget.TextView
 import android.widget.Toast
 import androidx.cardview.widget.CardView
 import com.example.quizletfinal.models.Card
+import java.util.Locale
 
-class MultiChoiceActivity : AppCompatActivity() {
+class MultiChoiceActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     private lateinit var frontAnimator  : AnimatorSet
     private lateinit var backAnimator : AnimatorSet
     private lateinit var btnBackCard : CardView
@@ -32,6 +35,8 @@ class MultiChoiceActivity : AppCompatActivity() {
     private var selectedAnswers: MutableList<String?> = mutableListOf()
     private var correctCount: Int = 0
     private var inCorrectCount: Int = 0;
+    private lateinit var textToSpeech: TextToSpeech
+
 
     private val cardList = listOf(
         Card("Hello", "Xin chào"),
@@ -78,6 +83,7 @@ class MultiChoiceActivity : AppCompatActivity() {
         txtAnswerD = findViewById(R.id.txtAnswerD)
 
         findViewById<TextView>(R.id.totalTerm).text = cardList.size.toString()
+        textToSpeech = TextToSpeech(this, this)
 
         btnFrontCard.cameraDistance = 8000 * scale;
         btnBackCard.cameraDistance = 8000 * scale;
@@ -125,6 +131,7 @@ class MultiChoiceActivity : AppCompatActivity() {
             if (isCorrect) {
                 answerReviewList.add(1)
                 correctCount ++;
+                speakText(card.english)
             } else {
                 answerReviewList.add(0)
                 inCorrectCount ++;
@@ -139,7 +146,17 @@ class MultiChoiceActivity : AppCompatActivity() {
         }
     }
 
+    private fun speakText(english: String) {
+        textToSpeech.speak(english, TextToSpeech.QUEUE_FLUSH, null, null)
+    }
+    override fun onDestroy() {
+        if (textToSpeech.isSpeaking) {
+            textToSpeech.stop()
+        }
+        textToSpeech.shutdown()
 
+        super.onDestroy()
+    }
     private fun flip() {
         if (isFront) {
             frontAnimator.setTarget(btnFrontCard)
@@ -214,6 +231,18 @@ class MultiChoiceActivity : AppCompatActivity() {
 
     fun <T> AppCompatActivity.startActivity(activityClass: Class<T>) {
         startActivity(Intent(this, activityClass))
+    }
+
+    override fun onInit(status: Int) {
+        if (status == TextToSpeech.SUCCESS) {
+            val result = textToSpeech.setLanguage(Locale.US)
+
+            if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
+                Log.e("TextToSpeech", "Language is not supported")
+            }
+        } else {
+            Log.e("TextToSpeech", "Initialization failed")
+        }
     }
 
 }
