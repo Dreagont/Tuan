@@ -6,6 +6,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.provider.OpenableColumns
+import android.util.Log
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
@@ -26,11 +27,14 @@ class CsvReaderActivity : AppCompatActivity() {
 
     private val READ_REQUEST_CODE = 123
     private val cardList = ArrayList<Card>()
+    private var username: String? = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_csv_reader)
         fileName = findViewById(R.id.fileName)
+
+        username = intent.getStringExtra("username")
 
         findViewById<Button>(R.id.button_loadCsv).setOnClickListener {
             val intent = Intent(Intent.ACTION_OPEN_DOCUMENT)
@@ -53,6 +57,7 @@ class CsvReaderActivity : AppCompatActivity() {
                             val card = Card(english, vietnamese)
                             cardList.add(card)
                         }
+
                         findViewById<Button>(R.id.button_saveCsv).setOnClickListener {
                             addTopics(cardList)
                             Toast.makeText(this, "Add cards successfully!", Toast.LENGTH_SHORT).show()
@@ -68,9 +73,12 @@ class CsvReaderActivity : AppCompatActivity() {
     }
 
     private fun addTopics(cardList: List<Card>) {
-        // Implement the logic to add topics using the cardList
-        // For example, you might have a Firebase reference for topics.
-        // Loop through the cardList and add each card as a topic.
+        val intent = Intent(this, AddTopicActivity::class.java)
+        intent.putParcelableArrayListExtra("csvReadCardList",ArrayList(cardList))
+        intent.putExtra("username",username)
+        startActivity(intent)
+        finish()
+
     }
 
     @SuppressLint("Range")

@@ -1,13 +1,16 @@
 package com.example.quizletfinal
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.RadioGroup
+import android.widget.ScrollView
 import android.widget.TextView
 import android.widget.Toast
 import com.example.quizletfinal.models.Card
@@ -37,18 +40,78 @@ class AddTopicActivity : AppCompatActivity() {
 
         val username = intent.getStringExtra("username")
 
+        val cardList: ArrayList<Card>? = intent.getParcelableArrayListExtra("csvReadCardList")
+
+        if (cardList != null) {
+            findViewById<ScrollView>(R.id.cardListScroll).visibility = View.GONE
+            submitButton.setOnClickListener {
+                //username in here is null why
+                Toast.makeText(this, "wjdnjas   $username", Toast.LENGTH_SHORT).show()
+
+                if (username != null)
+                {
+                    addTopicCsv(username, cardList)
+                }
+            }
+        } else {
+            findViewById<ScrollView>(R.id.cardListScroll).visibility = View.VISIBLE
+            submitButton.setOnClickListener {
+                Toast.makeText(this, "wjdnjas   $username", Toast.LENGTH_SHORT).show()
+
+                if (username != null)
+                {
+                    addTopic(username)
+                }
+            }
+        }
+
+        findViewById<LinearLayout>(R.id.addWithCsv).setOnClickListener {
+            val intent = Intent(this, CsvReaderActivity::class.java)
+            intent.putExtra("username",username)
+            startActivity(intent)
+        }
+
+
         closeButton.setOnClickListener { finish() }
 
         addCardTextView.setOnClickListener { addCard() }
 
-        submitButton.setOnClickListener {
-            if (username != null)
-            {
-                addTopic(username)
-            }
-        }
+
 
     }
+
+    private fun addTopicCsv(username: String, cardList: ArrayList<Card>) {
+        val title = topicTitleEditText.text.toString()
+        val description = topicDescriptionEditText.text.toString()
+        val selectedRadioButtonId = visibilityRadioGroup.checkedRadioButtonId
+
+        when {
+            title.isEmpty() -> Toast.makeText(this, "Please enter a title.", Toast.LENGTH_SHORT).show()
+            description.isEmpty() -> Toast.makeText(this, "Please enter a description.", Toast.LENGTH_SHORT).show()
+            selectedRadioButtonId == -1 -> Toast.makeText(this, "Please choose an option.", Toast.LENGTH_SHORT).show()
+            else -> {
+                val visibility = if (visibilityRadioGroup.checkedRadioButtonId == R.id.radio_private) "private" else "public"
+
+                val cardMap = mutableMapOf<String, Card>()
+
+                // Add cards from the CSV file
+                for (card in cardList) {
+                    cardMap[card.english] = card
+                }
+
+                if (cardMap.size >= 2) {
+                    val topicId = FirebaseDatabase.getInstance().getReference("users").child(username).child("topics").push().key
+                        ?: return
+                    val newTopic = Topic(topicId, title, description, visibility, null, cardMap)
+
+                    saveTopic(newTopic, username)
+                } else {
+                    Toast.makeText(this, "Please fill out at least two topics", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
+
 
     private fun addCard() {
         val boxView = LayoutInflater.from(this).inflate(R.layout.topic_card, cardContainer, false)
