@@ -46,7 +46,7 @@ class AddTopicActivity : AppCompatActivity() {
             findViewById<ScrollView>(R.id.cardListScroll).visibility = View.GONE
             submitButton.setOnClickListener {
                 //username in here is null why
-                Toast.makeText(this, "wjdnjas   $username", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "$username", Toast.LENGTH_SHORT).show()
 
                 if (username != null)
                 {

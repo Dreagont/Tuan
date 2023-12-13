@@ -8,7 +8,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.SearchView
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
+import com.google.firebase.auth.FirebaseAuth
 
 class TopicFragment : Fragment() {
     private lateinit var searchBar: SearchView
@@ -29,6 +31,8 @@ class TopicFragment : Fragment() {
         myTopicList = view.findViewById(R.id.myTopicList)
         otherTopicList = view.findViewById(R.id.otherTopicList)
         btnOpenAddTopic = view.findViewById(R.id.btnOpenAddTopic)
+        val username: String? = FirebaseAuth.getInstance().currentUser?.email
+        Toast.makeText(context, username, Toast.LENGTH_SHORT).show()
 
         btnOpenAddTopic.setOnClickListener {
             activity?.let {

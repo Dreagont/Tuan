@@ -10,6 +10,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
+import com.example.quizletfinal.models.User
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.firebase.auth.FirebaseAuth
@@ -40,6 +41,7 @@ class MainActivity : AppCompatActivity() {
         val username: String? = FirebaseAuth.getInstance().currentUser?.email
 
 
+
         val userEmail = FirebaseAuth.getInstance().currentUser?.email
         readWithEmail(userEmail, object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
@@ -60,7 +62,6 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 // Show a toast with the result
-                Toast.makeText(applicationContext, username, Toast.LENGTH_SHORT).show()
             }
 
             override fun onCancelled(databaseError: DatabaseError) {
@@ -103,7 +104,7 @@ class MainActivity : AppCompatActivity() {
 
         addTopic?.setOnClickListener {
             val intent = Intent(this, AddTopicActivity::class.java)
-            intent.putExtra("username", FirebaseAuth.getInstance().currentUser?.email?.split("@")?.get(0))
+            intent.putExtra("username",username )
             startActivity(intent)
             dialog.dismiss()
         }
