@@ -7,4 +7,6 @@ data class Topic(
     val visibility: String,
     val folderId: String? = null,
     val cards: Map<String, Card> = mapOf()
-)
+) {
+    constructor() : this("", "", "", "", null, mapOf())
+}

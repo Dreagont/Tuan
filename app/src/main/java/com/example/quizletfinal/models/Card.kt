@@ -9,6 +9,9 @@ data class Card(val english: String, val vietnamese: String) : Parcelable {
         parcel.readString() ?: ""
     )
 
+    constructor() : this("", "")
+
+
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeString(english)
         parcel.writeString(vietnamese)
