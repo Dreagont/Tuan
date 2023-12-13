@@ -68,9 +68,9 @@ class RegisterActivity : AppCompatActivity() {
             })
     }
 
-    private fun addUserToDatabase(username: String, email: String) {
+    private fun addUserToDatabase(uid: String, username: String, email: String) {
         val user = User(username, email, "Default.jpg")
-        FirebaseDatabase.getInstance().reference.child("users").child(username).setValue(user)
+        FirebaseDatabase.getInstance().reference.child("users").child(uid).setValue(user)
     }
     private fun validateInput(email: String, password: String, confirmPassword: String): Boolean {
         return when {
@@ -97,10 +97,13 @@ class RegisterActivity : AppCompatActivity() {
         auth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
-                    auth.currentUser?.sendEmailVerification()
+                    val firebaseUser = auth.currentUser
+                    firebaseUser?.sendEmailVerification()
                         ?.addOnCompleteListener { verificationTask ->
                             if (verificationTask.isSuccessful) {
-                                addUserToDatabase(username, email)
+                                firebaseUser.uid?.let { uid ->
+                                    addUserToDatabase(uid, username, email)
+                                }
                                 updateUI(auth.currentUser)
                                 showMessage("Registered successfully. Please check your email for verification.")
                             } else {
