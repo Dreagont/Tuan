@@ -39,8 +39,6 @@ class ProfileFragment : Fragment() {
         emailTextView.text = email
         usernameTextView.text = username
 
-        Toast.makeText(requireContext(), username, Toast.LENGTH_SHORT).show()
-
         btnChangePassword.setOnClickListener {
             showChangePasswordDialog()
         }
