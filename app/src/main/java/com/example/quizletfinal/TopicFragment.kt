@@ -69,7 +69,7 @@ class TopicFragment : Fragment() {
     }
     private fun readWithEmail(email: String?, processSnapshot: (DataSnapshot) -> Unit) {
         FirebaseDatabase.getInstance().getReference("users")
-            .addListenerForSingleValueEvent(object : ValueEventListener {
+            .addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
                     processSnapshot(dataSnapshot)
                 }
@@ -79,10 +79,11 @@ class TopicFragment : Fragment() {
                 }
             })
     }
-    private fun readTopic(key : String,processSnapshot: (DataSnapshot) -> Unit) {
+
+    private fun readTopic(key: String, processSnapshot: (DataSnapshot) -> Unit) {
         FirebaseDatabase.getInstance().getReference("users").child(key)
             .child("topics")
-            .addListenerForSingleValueEvent(object : ValueEventListener {
+            .addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
                     processSnapshot(dataSnapshot)
                 }
@@ -92,29 +93,33 @@ class TopicFragment : Fragment() {
                 }
             })
     }
-    private fun loadTopic(email: String) {
 
+    private fun loadTopic(email: String) {
         readWithEmail(email) { dataSnapshot ->
             dataSnapshot.children.forEach { userSnapshot ->
                 if (userSnapshot.child("email").value.toString() == email) {
-
                     readTopic(userSnapshot.key.toString()) { dataSnapshot ->
+                        val updatedTopics = mutableListOf<Topic>()
+
                         dataSnapshot.children.forEach { topicSnapshot ->
                             val topic = topicSnapshot.getValue(Topic::class.java)
                             if (topic != null) {
-                                topics.add(topic)
+                                updatedTopics.add(topic)
                             }
                         }
+
+                        topics.clear()
+                        topics.addAll(updatedTopics)
 
                         val adapter = TopicAdapter(requireContext(), topics)
                         myTopicList.adapter = adapter
                         adapter.notifyDataSetChanged()
+
                         if (topics.isEmpty()) {
                             ifNoTopic.visibility = View.VISIBLE
                         } else {
                             ifNoTopic.visibility = View.GONE
                         }
-
                     }
                     return@readWithEmail
                 }
