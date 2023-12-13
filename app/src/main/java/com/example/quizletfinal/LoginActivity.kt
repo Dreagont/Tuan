@@ -36,7 +36,8 @@ class LoginActivity : AppCompatActivity() {
         forgetPasswordButton = findViewById(R.id.btnForgotPassword)
 
         auth = FirebaseAuth.getInstance()
-        databaseReference = FirebaseDatabase.getInstance().reference.child("Users")
+        databaseReference = FirebaseDatabase.getInstance().getReference("users")
+
 
         loginButton.setOnClickListener { loginUser() }
         backButton.setOnClickListener {
@@ -75,7 +76,7 @@ class LoginActivity : AppCompatActivity() {
     private fun saveUserData(firebaseUser: FirebaseUser) {
         val userId = firebaseUser.uid
 
-        databaseReference.child("users").child(userId).addListenerForSingleValueEvent(object : ValueEventListener {
+        databaseReference.child(userId).addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 val username = snapshot.child("username").getValue(String::class.java) ?: ""
                 val profileImage = snapshot.child("profileImage").getValue(String::class.java) ?: ""

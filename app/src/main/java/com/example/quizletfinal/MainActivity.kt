@@ -32,8 +32,6 @@ class MainActivity : AppCompatActivity() {
         activeFragment = mainFragment
         fragmentManager = supportFragmentManager
 
-        val username: String? = FirebaseAuth.getInstance().currentUser?.email
-
         val transaction: FragmentTransaction = fragmentManager.beginTransaction()
         transaction.replace(R.id.mainFrame, mainFragment)
         transaction.commit()
