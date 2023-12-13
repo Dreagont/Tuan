@@ -3,6 +3,7 @@ package com.example.quizletfinal
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.Toast
@@ -12,6 +13,10 @@ import androidx.fragment.app.FragmentTransaction
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 
 class MainActivity : AppCompatActivity() {
     private lateinit var mainFragment: MainFragment
@@ -20,7 +25,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var profileFragment: ProfileFragment
     private lateinit var activeFragment: Fragment
     private lateinit var fragmentManager: FragmentManager
-
+    var username: String = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -34,6 +39,35 @@ class MainActivity : AppCompatActivity() {
 
         val username: String? = FirebaseAuth.getInstance().currentUser?.email
 
+
+        val userEmail = FirebaseAuth.getInstance().currentUser?.email
+        readWithEmail(userEmail, object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+
+
+                for (userSnapshot in dataSnapshot.children) {
+                    val userEmail = userSnapshot.child("email").value.toString()
+
+                    if (userEmail == userEmail) {
+                        this@MainActivity.username = userSnapshot.child("username").value.toString()
+                        break
+                    }
+                }
+
+                // Log the result
+                if (username != null) {
+                    Log.d("FirebaseData", username)
+                }
+
+                // Show a toast with the result
+                Toast.makeText(applicationContext, username, Toast.LENGTH_SHORT).show()
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) {
+                // Getting data failed, log a message
+                Log.w("FirebaseData", "loadPost:onCancelled", databaseError.toException())
+            }
+        })
         val transaction: FragmentTransaction = fragmentManager.beginTransaction()
         transaction.replace(R.id.mainFrame, mainFragment)
         transaction.commit()
@@ -62,7 +96,7 @@ class MainActivity : AppCompatActivity() {
 
         addFolder?.setOnClickListener {
             val intent = Intent(this, AddFolderActivity::class.java)
-            intent.putExtra("username", FirebaseAuth.getInstance().currentUser?.email?.split("@")?.get(0))
+            intent.putExtra("username", username)
             startActivity(intent)
             dialog.dismiss()
         }
@@ -83,6 +117,13 @@ class MainActivity : AppCompatActivity() {
             transaction.hide(activeFragment).show(fragment).commit()
         }
         activeFragment = fragment
+    }
+
+    fun readWithEmail(currentMail: String?, valueEventListener: ValueEventListener) {
+        val databaseReference = FirebaseDatabase.getInstance().getReference("users")
+
+        // Use addListenerForSingleValueEvent for a one-time read
+        databaseReference.addListenerForSingleValueEvent(valueEventListener)
     }
 
 

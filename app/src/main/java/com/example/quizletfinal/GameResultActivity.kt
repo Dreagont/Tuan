@@ -2,6 +2,7 @@ package com.example.quizletfinal
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Button
 import android.widget.ListView
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -11,6 +12,8 @@ import com.example.quizletfinal.models.Card
 import com.example.quizletfinal.models.UserAnswer
 
 class GameResultActivity : AppCompatActivity() {
+    lateinit var reDo : Button
+    lateinit var reDoAll : Button
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_game_result)

@@ -38,7 +38,7 @@ class MultiChoiceActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     private lateinit var textToSpeech: TextToSpeech
 
 
-    private val cardList = listOf(
+    private var cardList = listOf(
         Card("Hello", "Xin chào"),
         Card("Goodbye", "Tạm biệt"),
         Card("Friend", "Bạn bè"),
@@ -63,6 +63,9 @@ class MultiChoiceActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_multi_choice)
+        cardList = cardList.shuffled()
+
+
 
         var scale : Float = applicationContext.resources.displayMetrics.density
 
