@@ -5,6 +5,7 @@ import android.os.Parcelable
 
 data class Topic(
     val id: String?,
+    val username : String?,
     val title: String?,
     val description: String?,
     val visibility: String?,
@@ -17,15 +18,17 @@ data class Topic(
         parcel.readString(),
         parcel.readString(),
         parcel.readString(),
+        parcel.readString(),
         parcel.readHashMap(Card::class.java.classLoader) as? Map<String, Card> ?: emptyMap()
     )
 
     constructor() : this(
-         "","","","","", mapOf()
+         "", "","","","","", mapOf()
     )
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeString(id)
+        parcel.writeString(username)
         parcel.writeString(title)
         parcel.writeString(description)
         parcel.writeString(visibility)

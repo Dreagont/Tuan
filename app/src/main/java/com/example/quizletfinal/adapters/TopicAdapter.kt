@@ -10,9 +10,11 @@ import com.example.quizletfinal.R
 import com.example.quizletfinal.models.OnItemClickListener
 import com.example.quizletfinal.models.Topic // Renamed from Folder
 
-class TopicAdapter(private val context: Context, private val topicList: List<Topic>, private var onItemClickListener: OnItemClickListener) :
-    RecyclerView.Adapter<TopicAdapter.ViewHolder>() {
-
+class TopicAdapter(
+    private val context: Context,
+    private val topicList: List<Topic>,
+    private var onItemClickListener: OnItemClickListener
+) : RecyclerView.Adapter<TopicAdapter.ViewHolder>() {
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val titleTextView: TextView = itemView.findViewById(R.id.txtTopicName)

@@ -4,22 +4,18 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.SearchView
-import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.quizletfinal.adapters.TopicAdapter
 import com.example.quizletfinal.models.OnItemClickListener
 import com.example.quizletfinal.models.Topic
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
@@ -64,7 +60,7 @@ class TopicFragment : Fragment() ,OnItemClickListener {
 
         btnOpenAddTopic.setOnClickListener {
             activity?.let {
-                startActivity(Intent(it, AddFolderActivity::class.java))
+                startActivity(Intent(it, AddTopicActivity::class.java))
             }
         }
     }
@@ -129,10 +125,9 @@ class TopicFragment : Fragment() ,OnItemClickListener {
     }
 
     override fun onItemClickListener(topic: Topic) {
-        Toast.makeText(requireContext(),"click",Toast.LENGTH_SHORT).show()
-        var intent = Intent(requireActivity(),TopicActivity::class.java)
-        intent.putExtra("topic",topic)
+        val intent = Intent(requireContext(), TopicActivity::class.java)
+        intent.putExtra("topicData", topic)
         startActivity(intent)
-    }
 
+    }
 }

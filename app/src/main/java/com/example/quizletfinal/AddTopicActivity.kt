@@ -1,9 +1,8 @@
 package com.example.quizletfinal
 
+import android.content.Context
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.Button
@@ -13,6 +12,7 @@ import android.widget.RadioGroup
 import android.widget.ScrollView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import com.example.quizletfinal.models.Card
 import com.example.quizletfinal.models.Topic
 import com.google.firebase.database.FirebaseDatabase
@@ -38,7 +38,8 @@ class AddTopicActivity : AppCompatActivity() {
         cardContainer = findViewById(R.id.container)
         submitButton = findViewById(R.id.btnAddTopic)
 
-        val username = intent.getStringExtra("username")
+        val sharedPreferences = this.getSharedPreferences("UserDetails", Context.MODE_PRIVATE)
+        val username = sharedPreferences.getString("Username", "No Username")
 
         val cardList: ArrayList<Card>? = intent.getParcelableArrayListExtra("csvReadCardList")
 
@@ -99,7 +100,7 @@ class AddTopicActivity : AppCompatActivity() {
                 if (cardMap.size >= 2) {
                     val topicId = FirebaseDatabase.getInstance().getReference("users").child(username).child("topics").push().key
                         ?: return
-                    val newTopic = Topic(topicId, title, description, visibility, null, cardMap)
+                    val newTopic = Topic(topicId, username, title, description, visibility, null, cardMap)
 
                     saveTopic(newTopic, username)
                 } else {
@@ -144,7 +145,7 @@ class AddTopicActivity : AppCompatActivity() {
 
                 if (cardMap.size >= 2) {
                     val topicId = FirebaseDatabase.getInstance().getReference("users").child(username).child("topics").push().key ?: return
-                    val newTopic = Topic(topicId, title, description, visibility, null, cardMap)
+                    val newTopic = Topic(topicId, username, title, description, visibility, null, cardMap)
 
                     saveTopic(newTopic, username)
                 } else {
