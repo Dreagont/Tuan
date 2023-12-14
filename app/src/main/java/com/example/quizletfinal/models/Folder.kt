@@ -5,4 +5,6 @@ data class Folder(
     val title: String,
     val description: String,
     val topics: List<String> = listOf()
-)
+) {
+    constructor() : this("", "", "", listOf())
+}

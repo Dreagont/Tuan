@@ -1,5 +1,6 @@
 package com.example.quizletfinal
 
+import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -27,7 +28,9 @@ class AddFolderActivity : AppCompatActivity() {
             finish()
         }
 
-        val username = intent.getStringExtra("username")
+        val sharedPreferences = this.getSharedPreferences("UserDetails", Context.MODE_PRIVATE)
+        val username = sharedPreferences.getString("Username", "No Username")
+
 
         addButton.setOnClickListener {
             if (username != null) {

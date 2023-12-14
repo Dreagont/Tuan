@@ -52,6 +52,10 @@ class MainActivity : AppCompatActivity() {
 
                     if (userEmail == userEmail) {
                         this@MainActivity.username = userSnapshot.child("username").value.toString()
+                        with(getSharedPreferences("UserDetails", MODE_PRIVATE).edit()) {
+                            putString("Username", this@MainActivity.username)
+                            apply()
+                        }
                         break
                     }
                 }
