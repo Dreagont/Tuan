@@ -11,7 +11,7 @@ class TopicActivity : AppCompatActivity() {
         setContentView(R.layout.activity_topic)
 
         // Retrieve the Topic data from the intent
-        val receivedTopic = intent.getSerializableExtra("topicData") as? Topic
+        val receivedTopic = intent.getParcelableExtra("topic") as? Topic
 
         // Check if the data is not null
         if (receivedTopic != null) {

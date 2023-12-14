@@ -17,7 +17,7 @@ data class Topic(
         parcel.readString(),
         parcel.readString(),
         parcel.readString(),
-        TODO("cards")
+        parcel.readHashMap(Card::class.java.classLoader) as? Map<String, Card> ?: emptyMap()
     )
 
     constructor() : this(
@@ -30,6 +30,7 @@ data class Topic(
         parcel.writeString(description)
         parcel.writeString(visibility)
         parcel.writeString(folderId)
+        parcel.writeMap(cards as Map<*, *>)
     }
 
     override fun describeContents(): Int {

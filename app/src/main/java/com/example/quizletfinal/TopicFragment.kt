@@ -130,6 +130,9 @@ class TopicFragment : Fragment() ,OnItemClickListener {
 
     override fun onItemClickListener(topic: Topic) {
         Toast.makeText(requireContext(),"click",Toast.LENGTH_SHORT).show()
+        var intent = Intent(requireActivity(),TopicActivity::class.java)
+        intent.putExtra("topic",topic)
+        startActivity(intent)
     }
 
 }
