@@ -37,7 +37,6 @@ class MultiChoiceActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     private var inCorrectCount: Int = 0;
     private lateinit var textToSpeech: TextToSpeech
 
-
     private var cardList = listOf(
         Card("Hello", "Xin chào"),
         Card("Goodbye", "Tạm biệt"),

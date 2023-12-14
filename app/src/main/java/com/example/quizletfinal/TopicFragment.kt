@@ -16,6 +16,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.quizletfinal.adapters.TopicAdapter
+import com.example.quizletfinal.models.OnItemClickListener
 import com.example.quizletfinal.models.Topic
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
@@ -24,7 +25,7 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 
-class TopicFragment : Fragment() {
+class TopicFragment : Fragment() ,OnItemClickListener {
     private lateinit var searchBar: SearchView
     private lateinit var myTopicList: RecyclerView
     private lateinit var otherTopicList: RecyclerView
@@ -111,7 +112,7 @@ class TopicFragment : Fragment() {
                         topics.clear()
                         topics.addAll(updatedTopics)
 
-                        val adapter = TopicAdapter(topics, requireContext())
+                        val adapter = TopicAdapter(requireContext(), topics, this)
                         myTopicList.adapter = adapter
                         adapter.notifyDataSetChanged()
 
@@ -125,6 +126,10 @@ class TopicFragment : Fragment() {
                 }
             }
         }
+    }
+
+    override fun onItemClickListener(topic: Topic) {
+        Toast.makeText(requireContext(),"click",Toast.LENGTH_SHORT).show()
     }
 
 }

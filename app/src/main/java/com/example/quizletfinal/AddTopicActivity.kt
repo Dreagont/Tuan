@@ -160,7 +160,7 @@ class AddTopicActivity : AppCompatActivity() {
     private fun saveTopic(topic: Topic, username: String) {
         val databaseReference = FirebaseDatabase.getInstance().getReference("users").child(username).child("topics")
 
-        databaseReference.child(topic.id).setValue(topic)
+        databaseReference.child(topic.id!!).setValue(topic)
             .addOnSuccessListener {
                 finish()
                 Toast.makeText(this, "Topic added successfully", Toast.LENGTH_SHORT).show()
