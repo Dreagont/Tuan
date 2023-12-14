@@ -4,29 +4,57 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
+import android.widget.Filterable
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.quizletfinal.R
-import com.example.quizletfinal.models.Topic // Renamed from Folder
+import com.example.quizletfinal.models.Topic
 
-class TopicAdapter(private val context: Context, private val topicList: List<Topic>) :
-    RecyclerView.Adapter<TopicAdapter.ViewHolder>() {
+class TopicAdapter(
+    private var topics : List<Topic>,
+    private val context: Context
+) : RecyclerView.Adapter<TopicAdapter.CertificatesHolder>() {
 
-    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val titleTextView: TextView = itemView.findViewById(R.id.txtTopicName)
+    private var originalTopics: List<Topic> = topics
+    private var adapterViewListener: AdapterView.OnItemClickListener? = null
+
+    interface OnItemClickListener {
+        fun onItemClick(user: Topic)
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+    fun setOnItemClickListener(listener: OnItemClickListener) {
+        adapterViewListener = AdapterView.OnItemClickListener { _, _, position, _ ->
+            listener.onItemClick(topics[position])
+        }
+    }
+
+
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CertificatesHolder {
         val view = LayoutInflater.from(context).inflate(R.layout.topic_layout, parent, false)
-        return ViewHolder(view)
+        return CertificatesHolder(view)
     }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val topic = topicList[position]
-        holder.titleTextView.text = topic.title
+    override fun onBindViewHolder(holder: CertificatesHolder, position: Int) {
+        val topic = topics[position]
+        holder.txtTopicName.text = topic.title
+
+
     }
 
     override fun getItemCount(): Int {
-        return topicList.size
+        return topics.size
+    }
+
+    inner class CertificatesHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val txtTopicName: TextView = itemView.findViewById(R.id.txtTopicName)
+
+        init {
+            itemView.setOnClickListener {
+                adapterViewListener?.onItemClick(null, itemView, adapterPosition, itemId)
+            }
+        }
     }
 }

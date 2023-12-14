@@ -111,7 +111,7 @@ class TopicFragment : Fragment() {
                         topics.clear()
                         topics.addAll(updatedTopics)
 
-                        val adapter = TopicAdapter(requireContext(), topics)
+                        val adapter = TopicAdapter(topics, requireContext())
                         myTopicList.adapter = adapter
                         adapter.notifyDataSetChanged()
 
