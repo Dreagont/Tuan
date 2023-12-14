@@ -46,9 +46,10 @@ class LibraryFragment : Fragment() {
         folderList.layoutManager = LinearLayoutManager(requireContext())
 
         val sharedPreferences = requireActivity().getSharedPreferences("UserDetails", Context.MODE_PRIVATE)
+        val username = sharedPreferences.getString("Username", "No Username")
         val email = sharedPreferences.getString("Email", "No Email")
 
-        if (email != null) loadFolders(email)
+        if (email != null) username?.let { loadFolders(it) }
 
         btnOpenAddFoder.setOnClickListener {
             activity?.let {
@@ -57,51 +58,31 @@ class LibraryFragment : Fragment() {
         }
     }
 
-    private fun loadFolders(email: String) {
-        readWithEmail(email) { dataSnapshot ->
-            dataSnapshot.children.forEach { userSnapshot ->
-                if (userSnapshot.child("email").value.toString() == email) {
-                    readFolder(userSnapshot.key.toString()) { folderSnapshot ->
-                        folders.clear()
+    private fun loadFolders(username: String) {
+        readFolders(username) { folderSnapshot ->
+            folders.clear()
 
-                        folderSnapshot.children.forEach { folderDataSnapshot ->
-                            val folder = folderDataSnapshot.getValue(Folder::class.java)
-                            folder?.let {
-                                folders.add(folder)
-                            }
-                        }
-
-                        val adapter = FolderAdapter(requireContext(), folders)
-                        folderList.adapter = adapter
-                        adapter.notifyDataSetChanged()
-
-                        if (folders.isEmpty()) {
-                            ifNoFolder.visibility = View.VISIBLE
-                        } else {
-                            ifNoFolder.visibility = View.GONE
-                        }
-                    }
-                    return@readWithEmail
+            folderSnapshot.children.forEach { folderDataSnapshot ->
+                val folder = folderDataSnapshot.getValue(Folder::class.java)
+                folder?.let {
+                    folders.add(folder)
                 }
+            }
+
+            val adapter = FolderAdapter(requireContext(), folders)
+            folderList.adapter = adapter
+            adapter.notifyDataSetChanged()
+
+            if (folders.isEmpty()) {
+                ifNoFolder.visibility = View.VISIBLE
+            } else {
+                ifNoFolder.visibility = View.GONE
             }
         }
     }
 
-    private fun readWithEmail(email: String?, processSnapshot: (DataSnapshot) -> Unit) {
-        FirebaseDatabase.getInstance().getReference("users")
-            .addValueEventListener(object : ValueEventListener {
-                override fun onDataChange(dataSnapshot: DataSnapshot) {
-                    processSnapshot(dataSnapshot)
-                }
-
-                override fun onCancelled(databaseError: DatabaseError) {
-                    Log.w("FirebaseData", "loadPost:onCancelled", databaseError.toException())
-                }
-            })
-    }
-
-    private fun readFolder(key: String, processSnapshot: (DataSnapshot) -> Unit) {
-        FirebaseDatabase.getInstance().getReference("users").child(key)
+    private fun readFolders(username: String, processSnapshot: (DataSnapshot) -> Unit) {
+        FirebaseDatabase.getInstance().getReference("users").child(username)
             .child("folders")
             .addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
@@ -113,5 +94,4 @@ class LibraryFragment : Fragment() {
                 }
             })
     }
-
 }
