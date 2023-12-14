@@ -63,7 +63,7 @@ class TopicFragment : Fragment() {
 
         btnOpenAddTopic.setOnClickListener {
             activity?.let {
-                startActivity(Intent(it, AddFolderActivity::class.java))
+                startActivity(Intent(it, AddTopicActivity::class.java))
             }
         }
     }

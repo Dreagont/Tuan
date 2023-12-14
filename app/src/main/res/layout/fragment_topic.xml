@@ -6,12 +6,11 @@
     android:layout_height="match_parent"
     tools:context=".TopicFragment">
 
-    <!-- TODO: Update blank fragment layout -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        >
+        android:orientation="vertical">
+
         <SearchView
             android:id="@+id/search_bar"
             android:layout_width="match_parent"
@@ -20,41 +19,43 @@
             android:iconifiedByDefault="false"
             android:queryBackground="@android:color/transparent"
             android:queryHint="Enter topic title"
-            android:layout_marginBottom="10dp"
-            />
+            android:layout_marginBottom="10dp"/>
+
         <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            >
+            android:layout_height="match_parent">
+
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                >
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="My topic"
                     android:textColor="@color/black"
-                    android:textSize="25dp"
-                    />
+                    android:textSize="25dp"/>
+
                 <androidx.recyclerview.widget.RecyclerView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     tools:listitem="@layout/topic_layout"
-                    android:id="@+id/myTopicList"
-                    />
+                    android:id="@+id/myTopicList"/>
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:id="@+id/ifNoTopic"
                     android:orientation="vertical">
+
                     <ImageView
                         android:layout_width="200dp"
                         android:layout_height="200dp"
                         android:src="@drawable/card_icon"/>
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -63,34 +64,37 @@
                         android:textColor="@color/black"
                         android:layout_gravity="center"
                         android:layout_marginTop="10dp"/>
+
+                    <Button
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Create a topic"
+                        android:layout_marginTop="10dp"
+                        android:id="@+id/btnOpenAddTopic"
+                        android:background="@drawable/blue_button_layout"
+                        android:padding="5dp"
+                        android:textColor="@color/white"
+                        android:layout_gravity="center"/>
                 </LinearLayout>
 
-                <Button
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Create a topic"
-                    android:layout_marginTop="10dp"
-                    android:id="@+id/btnOpenAddTopic"
-                    android:background="@drawable/blue_button_layout"
-                    android:padding="5dp"
-                    android:textColor="@color/white"
-                    android:layout_gravity="center"/>
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Other public topic"
                     android:textColor="@color/black"
                     android:textSize="25dp"
-                    android:layout_marginTop="10dp"
-                    />
+                    android:layout_marginTop="10dp"/>
+
                 <androidx.recyclerview.widget.RecyclerView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     tools:listitem="@layout/topic_layout"
-                    android:id="@+id/otherTopicList"
-                    />
+                    android:id="@+id/otherTopicList"/>
+
             </LinearLayout>
+
+
         </ScrollView>
 
     </LinearLayout>
