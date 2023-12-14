@@ -4,21 +4,17 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.SearchView
-import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.quizletfinal.adapters.TopicAdapter
 import com.example.quizletfinal.models.Topic
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
@@ -52,14 +48,25 @@ class TopicFragment : Fragment() {
 
         otherTopicList.layoutManager = LinearLayoutManager(requireContext())
         myTopicList.layoutManager = LinearLayoutManager(requireContext())
+
         val sharedPreferences = requireActivity().getSharedPreferences("UserDetails", Context.MODE_PRIVATE)
         val username = sharedPreferences.getString("Username", "No Username")
-        val email = sharedPreferences.getString("Email", "No Email")
 
+        if (username != null) {
+            loadTopic(username)
+        }
 
-        if (email != null) {
-            loadTopic(email)
-        };
+        val adapter = TopicAdapter(topics, requireContext())
+
+        myTopicList.adapter = adapter
+
+        adapter.setOnItemClickListener(object : TopicAdapter.OnItemClickListener {
+            override fun onItemClick(topic: Topic) {
+                val intent = Intent(requireContext(), TopicActivity::class.java)
+                intent.putExtra("topicData", topic)
+                startActivity(intent)
+            }
+        })
 
         btnOpenAddTopic.setOnClickListener {
             activity?.let {
@@ -67,23 +74,10 @@ class TopicFragment : Fragment() {
             }
         }
     }
-    private fun readWithEmail(email: String?, processSnapshot: (DataSnapshot) -> Unit) {
-        FirebaseDatabase.getInstance().getReference("users")
-            .addValueEventListener(object : ValueEventListener {
-                override fun onDataChange(dataSnapshot: DataSnapshot) {
-                    processSnapshot(dataSnapshot)
-                }
-
-                override fun onCancelled(databaseError: DatabaseError) {
-                    Log.w("FirebaseData", "loadPost:onCancelled", databaseError.toException())
-                }
-            })
-    }
-
     private fun readTopic(key: String, processSnapshot: (DataSnapshot) -> Unit) {
         FirebaseDatabase.getInstance().getReference("users").child(key)
             .child("topics")
-            .addValueEventListener(object : ValueEventListener {
+            .addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
                     processSnapshot(dataSnapshot)
                 }
@@ -94,37 +88,23 @@ class TopicFragment : Fragment() {
             })
     }
 
-    private fun loadTopic(email: String) {
-        readWithEmail(email) { dataSnapshot ->
-            dataSnapshot.children.forEach { userSnapshot ->
-                if (userSnapshot.child("email").value.toString() == email) {
-                    readTopic(userSnapshot.key.toString()) { dataSnapshot ->
-                        val updatedTopics = mutableListOf<Topic>()
-
-                        dataSnapshot.children.forEach { topicSnapshot ->
-                            val topic = topicSnapshot.getValue(Topic::class.java)
-                            if (topic != null) {
-                                updatedTopics.add(topic)
-                            }
-                        }
-
-                        topics.clear()
-                        topics.addAll(updatedTopics)
-
-                        val adapter = TopicAdapter(topics, requireContext())
-                        myTopicList.adapter = adapter
-                        adapter.notifyDataSetChanged()
-
-                        if (topics.isEmpty()) {
-                            ifNoTopic.visibility = View.VISIBLE
-                        } else {
-                            ifNoTopic.visibility = View.GONE
-                        }
-                    }
-                    return@readWithEmail
+    private fun loadTopic(username: String) {
+        readTopic(username) { dataSnapshot ->
+            dataSnapshot.children.forEach { topicSnapshot ->
+                val topic = topicSnapshot.getValue(Topic::class.java)
+                topic?.let {
+                    topics.add(topic)
                 }
+            }
+
+            val adapter = myTopicList.adapter as? TopicAdapter
+            adapter?.notifyDataSetChanged()
+
+            if (topics.isEmpty()) {
+                ifNoTopic.visibility = View.VISIBLE
+            } else {
+                ifNoTopic.visibility = View.GONE
             }
         }
     }
-
 }
