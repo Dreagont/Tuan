@@ -19,16 +19,16 @@
             android:layout_weight="30"
             android:layout_height="wrap_content"
             android:layout_marginLeft="2dp"
-            android:orientation="horizontal"
-            >
+            android:orientation="horizontal">
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="1"
                 android:textSize="20dp"
                 android:textColor="@color/black"
-                android:id="@+id/indexTerm"
-                />
+                android:id="@+id/indexTerm"/>
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -73,7 +73,7 @@
         app:cardUseCompatPadding="true">
 
         <LinearLayout
-            android:id="@+id/frontCardLayout"
+            android:id="@+id/cardViewFront"
             android:layout_width="match_parent"
             android:layout_height="550dp"
             android:gravity="center"
@@ -88,7 +88,7 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/backCardLayout"
+            android:id="@+id/cardViewBack"
             android:layout_width="match_parent"
             android:layout_height="550dp"
             android:gravity="center"

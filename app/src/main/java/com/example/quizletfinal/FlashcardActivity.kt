@@ -7,7 +7,6 @@ import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.ImageView
-import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
@@ -20,15 +19,14 @@ class FlashcardActivity : AppCompatActivity() {
     private lateinit var closeButton: Button
     private lateinit var indexTextView: TextView
     private lateinit var totalTextView: TextView
-    private lateinit var cardView: CardView
+    private lateinit var cardViewFront: CardView
+    private lateinit var cardViewBack: CardView
     private lateinit var backButton: ImageView
     private lateinit var playButton: ImageView
-    private lateinit var frontAnimator: AnimatorSet
-    private lateinit var backAnimator: AnimatorSet
-    private lateinit var btnBackCard : LinearLayout
-    private lateinit var btnFrontCard : LinearLayout
-    private lateinit var frontCard : TextView
-    private lateinit var backCard : TextView
+    private lateinit var flipFrontAnimator: AnimatorSet
+    private lateinit var flipBackAnimator: AnimatorSet
+    private lateinit var frontCardText : TextView
+    private lateinit var backCardText : TextView
     private var isFront: Boolean = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,55 +34,56 @@ class FlashcardActivity : AppCompatActivity() {
         setContentView(R.layout.activity_flashcard)
 
         val receivedTopic = intent.getParcelableExtra<Topic>("topicData")
-
         cards = receivedTopic?.cards?.values?.toList() ?: emptyList()
 
         closeButton = findViewById(R.id.btnClose)
         indexTextView = findViewById(R.id.indexTerm)
         totalTextView = findViewById(R.id.totalTerm)
-        cardView = findViewById(R.id.cardView)
+        cardViewFront = findViewById(R.id.cardViewFront)
+        cardViewBack = findViewById(R.id.cardViewBack)
 
-        var scale : Float = applicationContext.resources.displayMetrics.density
-
-        btnFrontCard = findViewById(R.id.frontCardLayout)
-        btnBackCard = findViewById(R.id.backCardLayout)
-
-        frontCard = findViewById(R.id.frontCard)
-        backCard = findViewById(R.id.backCard)
+        frontCardText = findViewById(R.id.frontCard)
+        backCardText = findViewById(R.id.backCard)
 
         backButton = findViewById(R.id.btnBack)
         playButton = findViewById(R.id.btnPlay)
 
-        btnFrontCard.cameraDistance = 8000 * scale;
-        btnBackCard.cameraDistance = 8000 * scale;
+        // Load the first card if exists and update UI accordingly
+        if (cards.isNotEmpty()) {
+            loadCard(cards[currentCardIndex])
+        }
 
-        frontAnimator = AnimatorInflater.loadAnimator(applicationContext, R.animator.front_animator) as AnimatorSet
-        backAnimator = AnimatorInflater.loadAnimator(applicationContext, R.animator.back_animator) as AnimatorSet
+        val scale: Float = applicationContext.resources.displayMetrics.density
+        cardViewFront.cameraDistance = 8000 * scale
+        cardViewBack.cameraDistance = 8000 * scale
 
-        loadTerm(cards[currentCardIndex])
+        flipFrontAnimator = AnimatorInflater.loadAnimator(applicationContext, R.animator.front_animator) as AnimatorSet
+        flipBackAnimator = AnimatorInflater.loadAnimator(applicationContext, R.animator.back_animator) as AnimatorSet
 
-        btnFrontCard.setOnClickListener {
+        cardViewBack.visibility = View.GONE // Initially the back of the card is not visible
+
+        cardViewFront.setOnClickListener {
             flipCard()
         }
-        btnBackCard.setOnClickListener {
+        cardViewBack.setOnClickListener {
             flipCard()
         }
 
         backButton.setOnClickListener { previousCard() }
         playButton.setOnClickListener { flipCard() }
-
-
         closeButton.setOnClickListener { finish() }
     }
 
-    private fun loadTerm(card: Card) {
-        frontCard.text = card.english
-        backCard.text = card.vietnamese
+    private fun loadCard(card: Card) {
+        frontCardText.text = card.english
+        backCardText.text = card.vietnamese
+        updateUI() // Update the index view and total view
     }
 
     private fun previousCard() {
         if (currentCardIndex > 0) {
             currentCardIndex--
+            loadCard(cards[currentCardIndex])
         } else {
             Log.d("FlashcardActivity", "Reached first card")
         }
@@ -93,6 +92,7 @@ class FlashcardActivity : AppCompatActivity() {
     private fun nextCard() {
         if (currentCardIndex < cards.size - 1) {
             currentCardIndex++
+            loadCard(cards[currentCardIndex])
         } else {
             Log.d("FlashcardActivity", "Reached last card")
         }
@@ -100,33 +100,27 @@ class FlashcardActivity : AppCompatActivity() {
 
     private fun flipCard() {
         if (isFront) {
-            btnFrontCard.visibility = View.GONE
-            btnBackCard.visibility = View.VISIBLE
-            frontAnimator.setTarget(btnFrontCard)
-            backAnimator.setTarget(btnBackCard)
-            frontAnimator.start()
-            backAnimator.start()
-            isFront =false
+            flipFrontAnimator.setTarget(cardViewFront)
+            flipBackAnimator.setTarget(cardViewBack)
+            flipFrontAnimator.start()
+            flipBackAnimator.start()
+            cardViewFront.visibility = View.GONE
+            cardViewBack.visibility = View.VISIBLE
+            isFront = false
         } else {
-            btnFrontCard.visibility = View.VISIBLE
-            btnBackCard.visibility = View.GONE
-            frontAnimator.setTarget(btnBackCard)
-            backAnimator.setTarget(btnFrontCard)
-            frontAnimator.start()
-            backAnimator.start()
+            flipFrontAnimator.setTarget(cardViewBack)
+            flipBackAnimator.setTarget(cardViewFront)
+            flipFrontAnimator.start()
+            flipBackAnimator.start()
+            cardViewBack.visibility = View.GONE
+            cardViewFront.visibility = View.VISIBLE
             isFront = true
         }
     }
 
-    private fun markCardLearned() {
-        // Example: cards[currentCardIndex].isLearned = true
-        nextCard()
+    private fun updateUI() {
+        indexTextView.text = (currentCardIndex + 1).toString() // Updates the index text view with the current card index + 1
+        totalTextView.text = cards.size.toString() // Updates the total text view with the number of cards
     }
-
-    private fun markCardLearnLater() {
-        // Example: cards[currentCardIndex].isLearned = false
-        nextCard()
-    }
-
 
 }
