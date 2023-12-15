@@ -1,8 +1,11 @@
 package com.example.quizletfinal
 
+import android.app.ProgressDialog
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -29,6 +32,9 @@ class TopicFragment : Fragment() ,OnItemClickListener {
     private lateinit var otherTopicList: RecyclerView
     private lateinit var btnOpenAddTopic: Button
     private lateinit var ifNoTopic : LinearLayout
+    private lateinit var progressDialog: ProgressDialog
+    private val handler = Handler(Looper.getMainLooper())
+
     val topics = mutableListOf<Topic>()
 
     override fun onCreateView(
@@ -40,16 +46,18 @@ class TopicFragment : Fragment() ,OnItemClickListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        progressDialog = ProgressDialog(requireContext())
+        progressDialog.setMessage("Loading...")
+        progressDialog.setCancelable(false)
+
 
         searchBar = view.findViewById(R.id.search_bar)
         myTopicList = view.findViewById(R.id.myTopicList)
-        otherTopicList = view.findViewById(R.id.otherTopicList)
         btnOpenAddTopic = view.findViewById(R.id.btnOpenAddTopic)
         ifNoTopic = view.findViewById(R.id.ifNoTopic)
 
         ifNoTopic.visibility = View.GONE
 
-        otherTopicList.layoutManager = LinearLayoutManager(requireContext())
         myTopicList.layoutManager = LinearLayoutManager(requireContext())
         val sharedPreferences = requireActivity().getSharedPreferences("UserDetails", Context.MODE_PRIVATE)
         val username = sharedPreferences.getString("Username", "No Username")
@@ -94,6 +102,8 @@ class TopicFragment : Fragment() ,OnItemClickListener {
     }
 
     private fun loadTopic(email: String) {
+        progressDialog.show()
+
         readWithEmail(email) { dataSnapshot ->
             dataSnapshot.children.forEach { userSnapshot ->
                 if (userSnapshot.child("email").value.toString() == email) {
@@ -119,6 +129,9 @@ class TopicFragment : Fragment() ,OnItemClickListener {
                         } else {
                             ifNoTopic.visibility = View.GONE
                         }
+                        handler.postDelayed({
+                            progressDialog.dismiss()
+                        }, 2000)
                     }
                     return@readWithEmail
                 }
