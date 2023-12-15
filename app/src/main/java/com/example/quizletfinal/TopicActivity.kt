@@ -37,7 +37,9 @@ class TopicActivity : AppCompatActivity() {
             closeButton.setOnClickListener { finish() }
 
             flashCardGame.setOnClickListener {
-                startActivity(Intent(this, FlashcardActivity::class.java))
+                val intent = Intent(this, FlashcardActivity::class.java)
+                intent.putExtra("topicData", receivedTopic)
+                startActivity(intent)
             }
 
         } else {

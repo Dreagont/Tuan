@@ -47,12 +47,12 @@
                 android:id="@+id/totalTerm"
                 />
         </LinearLayout>
-        <ImageView
+        <Button
             android:id="@+id/btnClose"
             android:layout_width="20dp"
             android:layout_height="25dp"
             android:layout_weight="1"
-            android:src="@drawable/close_icon" />
+            android:background="@drawable/close_icon" />
     </LinearLayout>
 
     <LinearLayout
@@ -60,8 +60,8 @@
         android:layout_height="3dp"
         android:background="#20000000" />
 
-    <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="18dp"
@@ -73,6 +73,7 @@
         app:cardUseCompatPadding="true">
 
         <LinearLayout
+            android:id="@+id/frontCardLayout"
             android:layout_width="match_parent"
             android:layout_height="550dp"
             android:gravity="center"
@@ -80,10 +81,26 @@
             android:padding="5dp">
 
             <TextView
-                android:id="@+id/card"
+                android:id="@+id/frontCard"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Card here" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/backCardLayout"
+            android:layout_width="match_parent"
+            android:layout_height="550dp"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="5dp"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/backCard"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Back card here"/>
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 
