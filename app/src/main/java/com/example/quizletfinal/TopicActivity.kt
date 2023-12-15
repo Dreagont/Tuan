@@ -21,15 +21,12 @@ import java.util.Locale
 
 class TopicActivity : AppCompatActivity(), OnItemClickListener, TextToSpeech.OnInitListener { //here
     private lateinit var textToSpeech: TextToSpeech //here
-    var loginUser: String? = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_topic)
 
         val receivedTopic = intent.getParcelableExtra<Topic>("topicData")
-        loginUser = intent.getStringExtra("loginUser")
-
 
         if (receivedTopic != null) {
             val closeButton = findViewById<Button>(R.id.btnClose)
@@ -41,15 +38,6 @@ class TopicActivity : AppCompatActivity(), OnItemClickListener, TextToSpeech.OnI
             val multiChoice = findViewById<LinearLayout>(R.id.btnMultiple)
             val btnTextGame = findViewById<LinearLayout>(R.id.btnTextGame)
             val cardListView = findViewById<RecyclerView>(R.id.cardListView)
-
-            val leaderBoard = findViewById<TextView>(R.id.leaderBoard)
-
-            leaderBoard.setOnClickListener {
-                val intent = Intent(this, RankActivity::class.java)
-                intent.putExtra("topicData", receivedTopic)
-                startActivity(intent)
-            }
-
 
             val username = receivedTopic.username
             val topicNameText = receivedTopic.title
@@ -78,11 +66,9 @@ class TopicActivity : AppCompatActivity(), OnItemClickListener, TextToSpeech.OnI
 
             multiChoice.setOnClickListener {
                 val intent = Intent(this, TestSettingActivity::class.java)
-                intent.putExtra("username",receivedTopic.username)
+
                 intent.putExtra("topicName", receivedTopic.title)
                 intent.putExtra("cardList", ArrayList(cardList))
-                intent.putExtra("topicId",receivedTopic.id)
-                intent.putExtra("loginUser",loginUser)
                 intent.putExtra("game", "multi")
 
                 startActivity(intent)
