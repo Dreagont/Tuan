@@ -41,8 +41,8 @@ class TestSettingActivity : AppCompatActivity() {
         var cardList =  intent.getSerializableExtra("cardList") as List<Card>
         var username = intent.getStringExtra("username")
         loginUser = intent.getStringExtra("loginUser")
-
         txtTopicName.text = intent.getStringExtra("topicName")
+
         txtMaxTopicTerm.text = " max " + cardList.size.toString()
 
         testCount.setText(cardList.size.toString())
