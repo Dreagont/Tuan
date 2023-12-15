@@ -1,5 +1,6 @@
 package com.example.quizletfinal
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
@@ -12,9 +13,16 @@ import com.example.quizletfinal.models.UserAnswer
 class GameResultActivity : AppCompatActivity() {
     lateinit var reDo : Button
     lateinit var reDoAll : Button
+    private var wrongCardList: List<Card>? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_game_result)
+        reDo = findViewById(R.id.reDo)
+        reDoAll = findViewById(R.id.reDoAll)
+
+
+        var game = intent.getStringExtra("game")
 
         val selectedAnswers = intent.getStringArrayListExtra("selectedAnswers")
         val answerReviewList = intent.getIntArrayExtra("answerReviewList") ?: intArrayOf()
@@ -22,7 +30,33 @@ class GameResultActivity : AppCompatActivity() {
         val correctCount = intent.getIntExtra("correctCount", 0)
         val incorrectCount = intent.getIntExtra("incorrectCount", 0)
         val totalTerm = intent.getIntExtra("totalTerm", 0)
+        var name = intent.getStringExtra("topicName")
+        wrongCardList = intent.getParcelableArrayListExtra("wrongCardList")
 
+        if (wrongCardList.isNullOrEmpty()) {
+            reDo.alpha = 0.5f
+            reDo.isClickable = false
+            reDo.isEnabled = false
+        }
+
+        reDo.setOnClickListener {
+            val intent = Intent(this, TestSettingActivity::class.java)
+            intent.putExtra("topicName", name)
+            intent.putExtra("cardList", ArrayList(wrongCardList))
+            intent.putExtra("game", game)
+            startActivity(intent)
+            finish()
+
+        }
+
+        reDoAll.setOnClickListener {
+            val intent = Intent(this, TestSettingActivity::class.java)
+            intent.putExtra("topicName", name)
+            intent.putExtra("cardList", ArrayList(cardList))
+            intent.putExtra("game", game)
+            startActivity(intent)
+            finish()
+        }
 
         val rightPercentage: Float = correctCount.toFloat() / totalTerm.toFloat() * 100
         val wrongPercentage: Float = incorrectCount.toFloat() / totalTerm.toFloat() * 100

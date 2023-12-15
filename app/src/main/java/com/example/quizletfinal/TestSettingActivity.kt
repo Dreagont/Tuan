@@ -42,6 +42,8 @@ class TestSettingActivity : AppCompatActivity() {
         txtTopicName.text = intent.getStringExtra("topicName")
         txtMaxTopicTerm.text = " max " + cardList.size.toString()
 
+        testCount.setText(cardList.size.toString())
+
         var isEnglish = if (btnEnglish.isChecked) 2 else 1
         var isInstant = if (btnInstant.isChecked) 1 else 2
         var isSpeech = if (btnSpeech.isChecked) 1 else 2
@@ -90,6 +92,7 @@ class TestSettingActivity : AppCompatActivity() {
             intent.putExtra("isEnglish",isEnglish)
             intent.putExtra("isInstant",isInstant)
             intent.putExtra("isSpeech",isSpeech)
+            intent.putExtra("topicName",txtTopicName.text.toString())
             startActivity(intent)
         }
     }

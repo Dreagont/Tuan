@@ -35,8 +35,8 @@ class TopicActivity : AppCompatActivity(), OnItemClickListener, TextToSpeech.OnI
             val termNumber = findViewById<TextView>(R.id.txtTermNumber)
             val topicDescriptionView = findViewById<TextView>(R.id.txtTopicDescription)
             val flashCardGame = findViewById<LinearLayout>(R.id.btnFlashcard)
-            val  multiChoice= findViewById<LinearLayout>(R.id.btnMultiple)
-
+            val multiChoice = findViewById<LinearLayout>(R.id.btnMultiple)
+            val btnTextGame = findViewById<LinearLayout>(R.id.btnTextGame)
             val cardListView = findViewById<RecyclerView>(R.id.cardListView)
 
             val username = receivedTopic.username
@@ -70,6 +70,16 @@ class TopicActivity : AppCompatActivity(), OnItemClickListener, TextToSpeech.OnI
                 intent.putExtra("topicName", receivedTopic.title)
                 intent.putExtra("cardList", ArrayList(cardList))
                 intent.putExtra("game", "multi")
+
+                startActivity(intent)
+            }
+
+            btnTextGame.setOnClickListener {
+                val intent = Intent(this, TestSettingActivity::class.java)
+
+                intent.putExtra("topicName", receivedTopic.title)
+                intent.putExtra("cardList", ArrayList(cardList))
+                intent.putExtra("game", "text")
 
                 startActivity(intent)
             }

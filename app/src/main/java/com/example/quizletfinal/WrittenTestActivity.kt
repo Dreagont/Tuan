@@ -3,6 +3,8 @@ package com.example.quizletfinal
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.speech.tts.TextToSpeech
+import android.util.Log
 import android.view.KeyEvent
 import android.widget.Button
 import android.widget.EditText
@@ -10,8 +12,9 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.core.widget.addTextChangedListener
 import com.example.quizletfinal.models.Card
+import java.util.Locale
 
-class WrittenTestActivity : AppCompatActivity() {
+class WrittenTestActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     lateinit var cardTerm : TextView
     lateinit var txtUserInput : EditText
     lateinit var btnSkip : TextView
@@ -22,32 +25,18 @@ class WrittenTestActivity : AppCompatActivity() {
     private var currentIndex = 0
     private var answerReviewList: MutableList<Int> = mutableListOf()
     private var selectedAnswers: MutableList<String?> = mutableListOf()
-    private var cardList = listOf(
-        Card("Hello", "Xin chào"),
-        Card("Goodbye", "Tạm biệt"),
-        Card("Friend", "Bạn bè"),
-        Card("Family", "Gia đình"),
-        Card("Love", "Tình yêu"),
-        Card("Food", "Đồ ăn"),
-        Card("Water", "Nước"),
-        Card("Book", "Sách"),
-        Card("Movie", "Phim"),
-        Card("Music", "Âm nhạc"),
-        Card("Computer", "Máy tính"),
-        Card("Programming", "Lập trình"),
-        Card("Travel", "Du lịch"),
-        Card("Nature", "Thiên nhiên"),
-        Card("City", "Thành phố"),
-        Card("Education", "Giáo dục"),
-        Card("Work", "Công việc"),
-        Card("Hobby", "Sở thích"),
-        Card("Exercise", "Tập thể dục"),
-        Card("Sleep", "Ngủ")
-    )
+    lateinit var cardList : List<Card>
+    private lateinit var textToSpeech: TextToSpeech
+    private var isEnglish = 3;
+    private var isInstant = 3
+    private var isSpeech = 3
+    private var wrongCardList: MutableList<Card> = mutableListOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_written_test)
+
+        cardList = intent.getSerializableExtra("cardList") as ArrayList<Card>
 
         cardTerm = findViewById(R.id.cardTerm)
         txtUserInput = findViewById(R.id.txtUserInput)
@@ -56,7 +45,12 @@ class WrittenTestActivity : AppCompatActivity() {
 
         listLenght.text = cardList.size.toString()
 
-        cardList = cardList.shuffled()
+        textToSpeech = TextToSpeech(this, this)
+
+        isEnglish = intent.getIntExtra("isEnglish",3)
+        isInstant = intent.getIntExtra("isInstant",3)
+        isSpeech = intent.getIntExtra("isSpeech",3)
+
         loadTerm(cardList[currentIndex])
 
 
@@ -84,21 +78,30 @@ class WrittenTestActivity : AppCompatActivity() {
     private fun validateAnswer(text: CharSequence?, card: Card) {
         if (text != null) {
             val isCorrect = text.toString().equals(correctAnswer, ignoreCase = true)
-
+            if (isSpeech == 1)  {
+                if (isEnglish == 1) {
+                    speakText(card.english)
+                } else {
+                    speakText(card.vietnamese)
+                }
+            }
             if (isCorrect) {
                 answerReviewList.add(1)
-                correctCount++
+                correctCount ++
             } else {
+                wrongCardList.add(card)
                 answerReviewList.add(0)
-                inCorrectCount++
+                inCorrectCount ++;
             }
             selectedAnswers.add(text.toString())
+            if (isInstant == 1) {
+                Toast.makeText(
+                    applicationContext,
+                    if (isCorrect) "Correct" else "Incorrect",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
 
-            Toast.makeText(
-                applicationContext,
-                if (isCorrect) "Correct" else "Incorrect",
-                Toast.LENGTH_SHORT
-            ).show()
         }
     }
     fun moveToNextCard(cardList: List<Card>) {
@@ -108,24 +111,52 @@ class WrittenTestActivity : AppCompatActivity() {
             loadTerm(cardList[currentIndex])
             findViewById<TextView>(R.id.indexTerm).text = (currentIndex + 1).toString()
         } else {
+            var name = intent.getStringExtra("topicName")
             val intent = Intent(this, GameResultActivity::class.java)
 
-            val totalTermText = listLenght.text.toString()
+            val totalTermText = findViewById<TextView>(R.id.totalTerm).text.toString()
             val totalTerm = totalTermText.toIntOrNull() ?: 0
-
             intent.putExtra("answerReviewList", answerReviewList.toIntArray())
             intent.putExtra("correctCount", correctCount)
             intent.putExtra("incorrectCount", inCorrectCount)
             intent.putExtra("totalTerm", totalTerm)
+            intent.putExtra("topicName", name)
+            intent.putParcelableArrayListExtra("wrongCardList", ArrayList(wrongCardList))
             intent.putStringArrayListExtra("selectedAnswers", ArrayList(selectedAnswers))
             intent.putParcelableArrayListExtra("cardList", ArrayList(cardList))
+            intent.putExtra("game", "text")
             startActivity(intent)
+            finish()
         }
     }
 
     private fun loadTerm(card: Card) {
         cardTerm.text = card.vietnamese
         correctAnswer = card.english
+    }
+
+    override fun onInit(status: Int) {
+        if (status == TextToSpeech.SUCCESS) {
+            val result = textToSpeech.setLanguage(Locale.US)
+
+            if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
+                Log.e("TextToSpeech", "Language is not supported")
+            }
+        } else {
+            Log.e("TextToSpeech", "Initialization failed")
+        }
+    }
+
+    private fun speakText(english: String) {
+        textToSpeech.speak(english, TextToSpeech.QUEUE_FLUSH, null, null)
+    }
+    override fun onDestroy() {
+        if (textToSpeech.isSpeaking) {
+            textToSpeech.stop()
+        }
+        textToSpeech.shutdown()
+
+        super.onDestroy()
     }
 
 }
