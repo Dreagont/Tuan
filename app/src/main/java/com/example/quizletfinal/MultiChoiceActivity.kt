@@ -33,6 +33,10 @@ class MultiChoiceActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     private var isEnglish = 3;
     private var isInstant = 3
     private var isSpeech = 3
+    private var username = "22"
+    var topicId = ""
+    var loginUser: String? = ""
+
     private var wrongCardList: MutableList<Card> = mutableListOf()
 
     lateinit var cardList : List<Card>
@@ -63,8 +67,10 @@ class MultiChoiceActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         isEnglish = intent.getIntExtra("isEnglish",3)
         isInstant = intent.getIntExtra("isInstant",3)
         isSpeech = intent.getIntExtra("isSpeech",3)
+        username = intent.getStringExtra("username").toString()
+        topicId = intent.getStringExtra("topicId").toString()
 
-
+        loginUser = intent.getStringExtra("loginUser")
 
         loadTerm(cardList[currentIndex])
 
@@ -149,6 +155,9 @@ class MultiChoiceActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
             intent.putExtra("incorrectCount", inCorrectCount)
             intent.putExtra("totalTerm", totalTerm)
             intent.putExtra("topicName", name)
+            intent.putExtra("username",username)
+            intent.putExtra("topicId",topicId)
+            intent.putExtra("loginUser",loginUser)
             intent.putParcelableArrayListExtra("wrongCardList", ArrayList(wrongCardList))
             intent.putStringArrayListExtra("selectedAnswers", ArrayList(selectedAnswers))
             intent.putParcelableArrayListExtra("cardList", ArrayList(cardList))

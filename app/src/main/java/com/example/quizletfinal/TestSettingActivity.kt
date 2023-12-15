@@ -22,6 +22,8 @@ class TestSettingActivity : AppCompatActivity() {
     lateinit var testCount : EditText
     lateinit var txtMaxTopicTerm : TextView
     lateinit var currentSelect : TextView
+    var loginUser: String? = ""
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_test_setting)
@@ -37,7 +39,8 @@ class TestSettingActivity : AppCompatActivity() {
         currentSelect = findViewById(R.id.currentSelect)
 
         var cardList =  intent.getSerializableExtra("cardList") as List<Card>
-
+        var username = intent.getStringExtra("username")
+        loginUser = intent.getStringExtra("loginUser")
 
         txtTopicName.text = intent.getStringExtra("topicName")
         txtMaxTopicTerm.text = " max " + cardList.size.toString()
@@ -72,6 +75,8 @@ class TestSettingActivity : AppCompatActivity() {
         }
 
         var game = intent.getStringExtra("game")
+        var topicId = intent.getStringExtra("topicId")
+
 
         btnClose.setOnClickListener{
             finish()
@@ -92,6 +97,9 @@ class TestSettingActivity : AppCompatActivity() {
             intent.putExtra("isEnglish",isEnglish)
             intent.putExtra("isInstant",isInstant)
             intent.putExtra("isSpeech",isSpeech)
+            intent.putExtra("username",username)
+            intent.putExtra("topicId",topicId)
+            intent.putExtra("loginUser",loginUser)
             intent.putExtra("topicName",txtTopicName.text.toString())
             startActivity(intent)
         }

@@ -21,20 +21,23 @@
         android:theme="@style/Theme.QuizletFinal"
         tools:targetApi="31">
         <activity
+            android:name=".RankActivity"
+            android:exported="false" />
+        <activity
             android:name=".FolderActivity"
             android:exported="false" />
         <activity
             android:name=".CsvReaderActivity"
-            android:exported="true"></activity>
+            android:exported="true" />
         <activity
             android:name=".MultiChoiceActivity"
-            android:exported="true"></activity>
+            android:exported="true" />
         <activity
             android:name=".GameResultActivity"
-            android:exported="true"></activity>
+            android:exported="true" />
         <activity
             android:name=".WrittenTestActivity"
-            android:exported="true"></activity>
+            android:exported="true" />
         <activity
             android:name=".TestSettingActivity"
             android:exported="false" />
@@ -64,10 +67,10 @@
             android:exported="false" />
         <activity
             android:name=".SplashActivity"
-            android:exported="true"></activity>
+            android:exported="true" />
         <activity
             android:name=".LoginActivity"
-            android:exported="true"></activity>
+            android:exported="true" />
         <activity
             android:name=".MainActivity"
             android:exported="true">

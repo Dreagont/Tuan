@@ -6,14 +6,19 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.ListView
 import android.widget.TextView
+import android.widget.Toast
 import com.example.quizletfinal.adapters.UserAnswerAdapter
 import com.example.quizletfinal.models.Card
 import com.example.quizletfinal.models.UserAnswer
+import com.google.firebase.database.FirebaseDatabase
 
 class GameResultActivity : AppCompatActivity() {
     lateinit var reDo : Button
     lateinit var reDoAll : Button
     private var wrongCardList: List<Card>? = null
+    var topicId = ""
+    var loginUser: String? = ""
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -21,9 +26,11 @@ class GameResultActivity : AppCompatActivity() {
         reDo = findViewById(R.id.reDo)
         reDoAll = findViewById(R.id.reDoAll)
 
+        var username = intent.getStringExtra("username")
 
         var game = intent.getStringExtra("game")
 
+        loginUser = intent.getStringExtra("loginUser")
         val selectedAnswers = intent.getStringArrayListExtra("selectedAnswers")
         val answerReviewList = intent.getIntArrayExtra("answerReviewList") ?: intArrayOf()
         val cardList = intent.getParcelableArrayListExtra<Card>("cardList")
@@ -56,6 +63,12 @@ class GameResultActivity : AppCompatActivity() {
             intent.putExtra("game", game)
             startActivity(intent)
             finish()
+        }
+
+        topicId = intent.getStringExtra("topicId").toString()
+
+        if (username != null) {
+            saveResult(username,correctCount)
         }
 
         val rightPercentage: Float = correctCount.toFloat() / totalTerm.toFloat() * 100
@@ -94,5 +107,17 @@ class GameResultActivity : AppCompatActivity() {
         listView.layoutParams = params
         listView.requestLayout()
 
+    }
+
+    private fun saveResult(username: String, correctCount: Int) {
+
+        val databaseReference = FirebaseDatabase.getInstance().getReference("users")
+            .child(username)
+            .child("topics")
+            .child(topicId).child("MultipleChoice")
+            .child(loginUser.toString())
+            .setValue(correctCount).addOnSuccessListener {
+                Toast.makeText(this, "Ok", Toast.LENGTH_SHORT).show()
+            }
     }
 }

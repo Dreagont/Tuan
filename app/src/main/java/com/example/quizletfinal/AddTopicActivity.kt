@@ -39,7 +39,7 @@ class AddTopicActivity : AppCompatActivity() {
         submitButton = findViewById(R.id.btnAddTopic)
 
         val sharedPreferences = this.getSharedPreferences("UserDetails", Context.MODE_PRIVATE)
-        val username = sharedPreferences.getString("Username", "No Username")
+        val username = sharedPreferences.getString("username", "No Username")
 
         val cardList: ArrayList<Card>? = intent.getParcelableArrayListExtra("csvReadCardList")
 

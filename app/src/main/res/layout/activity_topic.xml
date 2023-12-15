@@ -99,6 +99,21 @@
                         android:textSize="15dp" />
                 </LinearLayout>
             </LinearLayout>
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="1"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:clickable="true"
+                android:layout_gravity="center"
+                android:id="@+id/leaderBoard"
+                android:text="Leader Board"
+                />
         </LinearLayout>
 
         <TextView

@@ -38,28 +38,30 @@ class MainActivity : AppCompatActivity() {
         activeFragment = mainFragment
         fragmentManager = supportFragmentManager
 
-        val username: String? = FirebaseAuth.getInstance().currentUser?.email
+        username = FirebaseAuth.getInstance().currentUser?.email.toString()
 
 
 
         val userEmail = FirebaseAuth.getInstance().currentUser?.email
+
+
         readWithEmail(userEmail, object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
 
 
                 for (userSnapshot in dataSnapshot.children) {
-                    val userEmail = userSnapshot.child("email").value.toString()
+                    val userEmailK = userSnapshot.child("email").value.toString()
 
-                    if (userEmail == userEmail) {
-                        this@MainActivity.username = userSnapshot.child("username").value.toString()
+                    if (userEmail == userEmailK) {
+                        username = userSnapshot.child("username").value.toString()
                         with(getSharedPreferences("UserDetails", MODE_PRIVATE).edit()) {
-                            putString("Username", this@MainActivity.username)
+                            putString("username", username)
+                            putString("loginUsername",userSnapshot.child("username").value.toString())
                             apply()
                         }
                         break
                     }
                 }
-
                 // Log the result
                 if (username != null) {
                     Log.d("FirebaseData", username)

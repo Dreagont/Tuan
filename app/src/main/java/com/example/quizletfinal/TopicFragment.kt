@@ -13,6 +13,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.SearchView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -34,13 +35,14 @@ class TopicFragment : Fragment() ,OnItemClickListener {
     private lateinit var ifNoTopic : LinearLayout
     private lateinit var progressDialog: ProgressDialog
     private val handler = Handler(Looper.getMainLooper())
-
+    var loginUser: String? = ""
     val topics = mutableListOf<Topic>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
         return inflater.inflate(R.layout.fragment_topic, container, false)
     }
 
@@ -49,6 +51,7 @@ class TopicFragment : Fragment() ,OnItemClickListener {
         progressDialog = ProgressDialog(requireContext())
         progressDialog.setMessage("Loading...")
         progressDialog.setCancelable(false)
+
 
 
         searchBar = view.findViewById(R.id.search_bar)
@@ -60,8 +63,9 @@ class TopicFragment : Fragment() ,OnItemClickListener {
 
         myTopicList.layoutManager = LinearLayoutManager(requireContext())
         val sharedPreferences = requireActivity().getSharedPreferences("UserDetails", Context.MODE_PRIVATE)
-        val username = sharedPreferences.getString("Username", "No Username")
+        val username = sharedPreferences.getString("username", "No Username")
         val email = sharedPreferences.getString("Email", "No Email")
+        loginUser = sharedPreferences.getString("loginUsername", "No Username")
 
 
         if (email != null) {
@@ -142,6 +146,7 @@ class TopicFragment : Fragment() ,OnItemClickListener {
     override fun onItemClickListener(topic: Topic) {
         val intent = Intent(requireContext(), TopicActivity::class.java)
         intent.putExtra("topicData", topic)
+        intent.putExtra("loginUser",loginUser)
         startActivity(intent)
 
     }
