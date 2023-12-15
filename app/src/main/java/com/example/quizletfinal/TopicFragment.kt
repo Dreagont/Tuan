@@ -14,6 +14,8 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.quizletfinal.adapters.TopicAdapter
+import com.example.quizletfinal.models.Card
+import com.example.quizletfinal.models.Folder
 import com.example.quizletfinal.models.OnItemClickListener
 import com.example.quizletfinal.models.Topic
 import com.google.firebase.database.DataSnapshot
@@ -129,5 +131,13 @@ class TopicFragment : Fragment() ,OnItemClickListener {
         intent.putExtra("topicData", topic)
         startActivity(intent)
 
+    }
+
+    override fun onItemClickListener(folder: Folder) {
+        TODO("Not yet implemented")
+    }
+
+    override fun onItemClickListener(card: Card) {
+        TODO("Not yet implemented")
     }
 }

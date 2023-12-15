@@ -5,8 +5,6 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.ListView
 import android.widget.TextView
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.example.quizletfinal.adapters.UserAnswerAdapter
 import com.example.quizletfinal.models.Card
 import com.example.quizletfinal.models.UserAnswer

@@ -1,7 +1,5 @@
 package com.example.quizletfinal
 
-import android.animation.AnimatorInflater
-import android.animation.AnimatorSet
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -11,14 +9,10 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.cardview.widget.CardView
 import com.example.quizletfinal.models.Card
+import com.example.quizletfinal.models.extendedCardList
 import java.util.Locale
 
 class MultiChoiceActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
-    private lateinit var frontAnimator  : AnimatorSet
-    private lateinit var backAnimator : AnimatorSet
-    private lateinit var btnBackCard : CardView
-    private lateinit var btnFrontCard : CardView
-    private var isFront : Boolean  = true
     private lateinit var btnAnswerA : CardView
     private lateinit var btnAnswerB : CardView
     private lateinit var btnAnswerC : CardView
@@ -36,40 +30,18 @@ class MultiChoiceActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     private var correctCount: Int = 0
     private var inCorrectCount: Int = 0;
     private lateinit var textToSpeech: TextToSpeech
+    private var isEnglish = 3;
+    private var isInstant = 3
+    private var isSpeech = 3
 
-    private var cardList = listOf(
-        Card("Hello", "Xin chào"),
-        Card("Goodbye", "Tạm biệt"),
-        Card("Friend", "Bạn bè"),
-        Card("Family", "Gia đình"),
-        Card("Love", "Tình yêu"),
-        Card("Food", "Đồ ăn"),
-        Card("Water", "Nước"),
-        Card("Book", "Sách"),
-        Card("Movie", "Phim"),
-        Card("Music", "Âm nhạc"),
-        Card("Computer", "Máy tính"),
-        Card("Programming", "Lập trình"),
-        Card("Travel", "Du lịch"),
-        Card("Nature", "Thiên nhiên"),
-        Card("City", "Thành phố"),
-        Card("Education", "Giáo dục"),
-        Card("Work", "Công việc"),
-        Card("Hobby", "Sở thích"),
-        Card("Exercise", "Tập thể dục"),
-        Card("Sleep", "Ngủ")
-    )
+    lateinit var cardList : List<Card>
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_multi_choice)
-        cardList = cardList.shuffled()
 
-
-
-        var scale : Float = applicationContext.resources.displayMetrics.density
-
-        btnFrontCard = findViewById(R.id.btnFrontCard)
-        btnBackCard = findViewById(R.id.btnBackCard)
+        cardList = intent.getSerializableExtra("cardList") as ArrayList<Card>
 
         frontCard = findViewById(R.id.frontCard)
         backCard = findViewById(R.id.backCard)
@@ -87,19 +59,11 @@ class MultiChoiceActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         findViewById<TextView>(R.id.totalTerm).text = cardList.size.toString()
         textToSpeech = TextToSpeech(this, this)
 
-        btnFrontCard.cameraDistance = 8000 * scale;
-        btnBackCard.cameraDistance = 8000 * scale;
+        isEnglish = intent.getIntExtra("isEnglish",3)
+        isInstant = intent.getIntExtra("isInstant",3)
+        isSpeech = intent.getIntExtra("isSpeech",3)
 
-        frontAnimator = AnimatorInflater.loadAnimator(applicationContext, R.animator.front_animator) as AnimatorSet
-        backAnimator = AnimatorInflater.loadAnimator(applicationContext, R.animator.back_animator) as AnimatorSet
 
-        btnFrontCard.setOnClickListener {
-            flip()
-        }
-
-        btnBackCard.setOnClickListener {
-            flip()
-        }
 
         loadTerm(cardList[currentIndex])
 
@@ -129,22 +93,29 @@ class MultiChoiceActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     private fun validateAnswer(text: CharSequence?, card: Card) {
         if (text != null) {
             val isCorrect = text == correctAnswer
-
+            if (isSpeech == 1)  {
+                if (isEnglish == 1) {
+                    speakText(card.english)
+                } else {
+                    speakText(card.vietnamese)
+                }
+            }
             if (isCorrect) {
                 answerReviewList.add(1)
-                correctCount ++;
-                speakText(card.english)
+                correctCount ++
             } else {
                 answerReviewList.add(0)
                 inCorrectCount ++;
             }
             selectedAnswers.add(text.toString())
+            if (isInstant == 1) {
+                Toast.makeText(
+                    applicationContext,
+                    if (isCorrect) "Correct" else "Incorrect",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
 
-            Toast.makeText(
-                applicationContext,
-                if (isCorrect) "Correct" else "Incorrect",
-                Toast.LENGTH_SHORT
-            ).show()
         }
     }
 
@@ -159,22 +130,6 @@ class MultiChoiceActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
         super.onDestroy()
     }
-    private fun flip() {
-        if (isFront) {
-            frontAnimator.setTarget(btnFrontCard)
-            backAnimator.setTarget(btnBackCard)
-            frontAnimator.start()
-            backAnimator.start()
-            isFront =false
-        } else {
-            frontAnimator.setTarget(btnBackCard)
-            backAnimator.setTarget(btnFrontCard)
-            frontAnimator.start()
-            backAnimator.start()
-            isFront = true
-        }
-    }
-
     fun moveToNextCard(cardList: List<Card>) {
         currentIndex++
 
@@ -194,42 +149,74 @@ class MultiChoiceActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
             intent.putStringArrayListExtra("selectedAnswers", ArrayList(selectedAnswers))
             intent.putParcelableArrayListExtra("cardList", ArrayList(cardList))
             startActivity(intent)
+            finish()
         }
     }
 
     private fun loadTerm(card: Card) {
-        frontCard.text = card.english
-        backCard.text = card.vietnamese
+        val isEnglish = isEnglish == 1
+        frontCard.text = if (isEnglish) card.english else card.vietnamese
 
-        val incorrectAnswers = cardList
-            .filter { it != card }
-            .shuffled()
-            .take(3)
-            .toMutableList()
+        // Check if cardList has less than 4 words
+        if (cardList.size < 4) {
+            val incorrectAnswers = extendedCardList.shuffled().take(4 - cardList.size).toMutableList()
+            val correctAnswerPosition = (0 until cardList.size).random()
 
-        val correctAnswerPosition = (0..3).random()
-
-        // Populate the answer options
-        val answerOptions = mutableListOf<String>()
-        for (i in 0 until 4) {
-            val answer = if (i == correctAnswerPosition) {
-                card.vietnamese
-            } else {
-                val incorrectAnswer = incorrectAnswers.removeAt(0)
-                incorrectAnswer.vietnamese
+            val answerOptions = mutableListOf<String?>()
+            for (i in 0 until 4) {
+                val answer = if (i == correctAnswerPosition) {
+                    if (isEnglish) card.vietnamese else card.english
+                } else {
+                    val incorrectAnswer = if (incorrectAnswers.isNotEmpty()) {
+                        if (isEnglish) incorrectAnswers.removeAt(0).vietnamese else incorrectAnswers.removeAt(0).english
+                    } else {
+                        if (isEnglish)  extendedCardList[i].vietnamese else  extendedCardList[i].english
+                    }
+                    incorrectAnswer
+                }
+                answerOptions.add(answer)
             }
-            answerOptions.add(answer)
+
+            val shuffledOptions = answerOptions.shuffled()
+
+            txtAnswerA.text = shuffledOptions[0]
+            txtAnswerB.text = shuffledOptions[1]
+            txtAnswerC.text = shuffledOptions[2]
+            txtAnswerD.text = shuffledOptions[3]
+
+            correctAnswer = if (isEnglish) card.vietnamese else card.english
+        } else {
+            val incorrectAnswers = cardList
+                .filter { it != card }
+                .shuffled()
+                .take(3)
+                .toMutableList()
+
+            val correctAnswerPosition = (0..3).random()
+
+            val answerOptions = mutableListOf<String>()
+            for (i in 0 until 4) {
+                val answer = if (i == correctAnswerPosition) {
+                    if (isEnglish) card.vietnamese else card.english
+                } else {
+                    val incorrectAnswer = incorrectAnswers.removeAt(0)
+                    if (isEnglish) incorrectAnswer.vietnamese else incorrectAnswer.english
+                }
+                answerOptions.add(answer)
+            }
+
+            val shuffledOptions = answerOptions.shuffled()
+
+            txtAnswerA.text = shuffledOptions[0]
+            txtAnswerB.text = shuffledOptions[1]
+            txtAnswerC.text = shuffledOptions[2]
+            txtAnswerD.text = shuffledOptions[3]
+
+            correctAnswer = if (isEnglish) card.vietnamese else card.english
+
         }
-
-        val shuffledOptions = answerOptions.shuffled()
-
-        txtAnswerA.text = shuffledOptions[0]
-        txtAnswerB.text = shuffledOptions[1]
-        txtAnswerC.text = shuffledOptions[2]
-        txtAnswerD.text = shuffledOptions[3]
-
-        correctAnswer = card.vietnamese
     }
+
 
     fun <T> AppCompatActivity.startActivity(activityClass: Class<T>) {
         startActivity(Intent(this, activityClass))

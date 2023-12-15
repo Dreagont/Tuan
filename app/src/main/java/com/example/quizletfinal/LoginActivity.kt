@@ -77,8 +77,9 @@ class LoginActivity : AppCompatActivity() {
             dataSnapshot.children.forEach { userSnapshot ->
                 if (userSnapshot.child("email").value.toString() == firebaseUser.email) {
                     with(getSharedPreferences("UserDetails", MODE_PRIVATE).edit()) {
-//                        putString("Username", userSnapshot.child("username").value.toString())
+                        putString("username", userSnapshot.child("username").value.toString())
                         putString("Email", firebaseUser.email)
+                        putString("image",userSnapshot.child("profileImage").value.toString())
                         apply()
                     }
                     return@readWithEmail

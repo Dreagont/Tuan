@@ -63,7 +63,6 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="18dp"
         android:layout_marginTop="16dp"
-
         android:layout_marginRight="18dp"
         >
         <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
