@@ -33,6 +33,7 @@ class MultiChoiceActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     private var isEnglish = 3;
     private var isInstant = 3
     private var isSpeech = 3
+    private var wrongCardList: MutableList<Card> = mutableListOf()
 
     lateinit var cardList : List<Card>
 
@@ -104,6 +105,7 @@ class MultiChoiceActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
                 answerReviewList.add(1)
                 correctCount ++
             } else {
+                wrongCardList.add(card)
                 answerReviewList.add(0)
                 inCorrectCount ++;
             }
@@ -137,17 +139,21 @@ class MultiChoiceActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
             loadTerm(cardList[currentIndex])
             findViewById<TextView>(R.id.indexTerm).text = (currentIndex + 1).toString()
         } else {
+            var name = intent.getStringExtra("topicName")
             val intent = Intent(this, GameResultActivity::class.java)
 
             val totalTermText = findViewById<TextView>(R.id.totalTerm).text.toString()
             val totalTerm = totalTermText.toIntOrNull() ?: 0
-
             intent.putExtra("answerReviewList", answerReviewList.toIntArray())
             intent.putExtra("correctCount", correctCount)
             intent.putExtra("incorrectCount", inCorrectCount)
             intent.putExtra("totalTerm", totalTerm)
+            intent.putExtra("topicName", name)
+            intent.putParcelableArrayListExtra("wrongCardList", ArrayList(wrongCardList))
             intent.putStringArrayListExtra("selectedAnswers", ArrayList(selectedAnswers))
             intent.putParcelableArrayListExtra("cardList", ArrayList(cardList))
+            intent.putExtra("game", "multi")
+
             startActivity(intent)
             finish()
         }
