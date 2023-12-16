@@ -20,31 +20,6 @@
             android:layout_marginLeft="2dp"
             android:orientation="horizontal"
             >
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="1"
-                android:textSize="20dp"
-                android:textColor="@color/black"
-                android:id="@+id/indexTerm"
-                />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/black"
-                android:textSize="20dp"
-
-                android:text="/"
-                />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="10"
-                android:textColor="@color/black"
-                android:textSize="20dp"
-
-                android:id="@+id/totalTerm"
-                />
         </LinearLayout>
         <ImageView
             android:id="@+id/btnClose"

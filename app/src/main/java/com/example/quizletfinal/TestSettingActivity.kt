@@ -102,6 +102,7 @@ class TestSettingActivity : AppCompatActivity() {
             intent.putExtra("loginUser",loginUser)
             intent.putExtra("topicName",txtTopicName.text.toString())
             startActivity(intent)
+            finish()
         }
     }
 }

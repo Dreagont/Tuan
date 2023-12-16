@@ -61,10 +61,6 @@ class ProfileFragment : Fragment() {
         username = sharedPreferences.getString("username", "No Username")
         userImage = sharedPreferences.getString("image", "No Email")
 
-
-        Toast.makeText(requireContext(),"user name: " + username.toString(),Toast.LENGTH_SHORT).show()
-        Toast.makeText(requireContext(),"user image: " + userImage.toString(),Toast.LENGTH_SHORT).show()
-
         profilePicture.setOnClickListener {
             ImagePicker.with(this)
                 .crop()

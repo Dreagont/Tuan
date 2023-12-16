@@ -4,6 +4,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.ListView
 import android.widget.TextView
 import android.widget.Toast
@@ -28,6 +29,10 @@ class GameResultActivity : AppCompatActivity() {
         setContentView(R.layout.activity_game_result)
         reDo = findViewById(R.id.reDo)
         reDoAll = findViewById(R.id.reDoAll)
+
+        var btnClose = findViewById<ImageView>(R.id.btnClose)
+
+        btnClose.setOnClickListener { finish() }
 
         var username = intent.getStringExtra("username")
 

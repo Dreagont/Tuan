@@ -57,6 +57,7 @@ class MainActivity : AppCompatActivity() {
                         with(getSharedPreferences("UserDetails", MODE_PRIVATE).edit()) {
                             putString("username", username)
                             putString("loginUsername",userSnapshot.child("username").value.toString())
+                            putString("image",userSnapshot.child("profileImage").value.toString())
                             apply()
                         }
                         break
