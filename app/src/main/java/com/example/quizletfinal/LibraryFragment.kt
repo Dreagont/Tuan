@@ -120,4 +120,8 @@ class LibraryFragment : Fragment(),OnItemClickListener {
     override fun onItemClickListener(card: Card) {
         TODO("Not yet implemented")
     }
+
+    override fun onItemLongClickListener(card: Card) {
+        TODO("Not yet implemented")
+    }
 }

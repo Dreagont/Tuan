@@ -2,18 +2,12 @@ package com.example.quizletfinal
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
 
 class LoginActivity : AppCompatActivity() {
     private lateinit var userNameEditText: EditText
@@ -63,42 +57,12 @@ class LoginActivity : AppCompatActivity() {
 
         auth.signInWithEmailAndPassword(email, password).addOnCompleteListener(this) { task ->
             if (task.isSuccessful && auth.currentUser?.isEmailVerified == true) {
-                auth.currentUser?.let { saveUserData(it) }
                 startActivity(Intent(this, MainActivity::class.java))
                 finish()
             } else {
                 showToast(task.exception?.message ?: "Authentication failed.")
             }
         }
-    }
-
-    private fun saveUserData(firebaseUser: FirebaseUser) {
-        readWithEmail(firebaseUser.email) { dataSnapshot ->
-            dataSnapshot.children.forEach { userSnapshot ->
-                if (userSnapshot.child("email").value.toString() == firebaseUser.email) {
-                    with(getSharedPreferences("UserDetails", MODE_PRIVATE).edit()) {
-                        putString("username", userSnapshot.child("username").value.toString())
-                        putString("Email", firebaseUser.email)
-                        putString("image",userSnapshot.child("profileImage").value.toString())
-                        apply()
-                    }
-                    return@readWithEmail
-                }
-            }
-        }
-    }
-
-    private fun readWithEmail(email: String?, processSnapshot: (DataSnapshot) -> Unit) {
-        FirebaseDatabase.getInstance().getReference("users")
-            .addListenerForSingleValueEvent(object : ValueEventListener {
-                override fun onDataChange(dataSnapshot: DataSnapshot) {
-                    processSnapshot(dataSnapshot)
-                }
-
-                override fun onCancelled(databaseError: DatabaseError) {
-                    Log.w("FirebaseData", "loadPost:onCancelled", databaseError.toException())
-                }
-            })
     }
 
     private fun showToast(message: String) {
