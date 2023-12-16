@@ -107,7 +107,7 @@ class MainFragment : Fragment(), OnItemClickListener {
                     topics.clear()
                     topics.addAll(updatedTopics)
 
-                    val adapter = TopicAdapter(requireContext(), topics, this@MainFragment)
+                    val adapter = TopicAdapter(requireContext(), updatedTopics, this@MainFragment)
                     otherTopicList.adapter = adapter
                     adapter.notifyDataSetChanged()
 

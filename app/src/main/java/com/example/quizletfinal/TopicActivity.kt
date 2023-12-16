@@ -96,7 +96,7 @@ class TopicActivity : AppCompatActivity(), OnItemClickListener, TextToSpeech.OnI
 
             username = receivedTopic!!.username.toString()
             val username = receivedTopic!!.username
-            val topicNameText = receivedTopic!!.title
+            val topicNameText =  receivedTopic!!.title
             val topicDescription = receivedTopic!!.description
             val termNumberValue = receivedTopic!!.cards.size
             textToSpeech = TextToSpeech(this, this)
