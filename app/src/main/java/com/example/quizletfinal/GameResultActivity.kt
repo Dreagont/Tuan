@@ -10,7 +10,10 @@ import android.widget.Toast
 import com.example.quizletfinal.adapters.UserAnswerAdapter
 import com.example.quizletfinal.models.Card
 import com.example.quizletfinal.models.UserAnswer
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 
 class GameResultActivity : AppCompatActivity() {
     lateinit var reDo : Button
@@ -31,6 +34,7 @@ class GameResultActivity : AppCompatActivity() {
         var game = intent.getStringExtra("game")
 
         loginUser = intent.getStringExtra("loginUser")
+
         val selectedAnswers = intent.getStringArrayListExtra("selectedAnswers")
         val answerReviewList = intent.getIntArrayExtra("answerReviewList") ?: intArrayOf()
         val cardList = intent.getParcelableArrayListExtra<Card>("cardList")
@@ -51,6 +55,9 @@ class GameResultActivity : AppCompatActivity() {
             intent.putExtra("topicName", name)
             intent.putExtra("cardList", ArrayList(wrongCardList))
             intent.putExtra("game", game)
+            intent.putExtra("username", username)
+            intent.putExtra("topicId", topicId)
+            intent.putExtra("loginUser", loginUser)
             startActivity(intent)
             finish()
 
@@ -61,15 +68,16 @@ class GameResultActivity : AppCompatActivity() {
             intent.putExtra("topicName", name)
             intent.putExtra("cardList", ArrayList(cardList))
             intent.putExtra("game", game)
+            intent.putExtra("username", username)
+            intent.putExtra("topicId", topicId)
+            intent.putExtra("loginUser", loginUser)
             startActivity(intent)
             finish()
         }
 
         topicId = intent.getStringExtra("topicId").toString()
 
-        if (username != null) {
-            saveResult(username,correctCount)
-        }
+        saveResult(username.toString(),correctCount, if (game == "text") "Written" else "MultipleChoice")
 
         val rightPercentage: Float = correctCount.toFloat() / totalTerm.toFloat() * 100
         val wrongPercentage: Float = incorrectCount.toFloat() / totalTerm.toFloat() * 100
@@ -109,15 +117,72 @@ class GameResultActivity : AppCompatActivity() {
 
     }
 
-    private fun saveResult(username: String, correctCount: Int) {
+    private fun saveResult(username: String, correctCount: Int, game : String) {
 
-        val databaseReference = FirebaseDatabase.getInstance().getReference("users")
+        val checkReference = FirebaseDatabase.getInstance().getReference("users")
             .child(username)
             .child("topics")
-            .child(topicId).child("MultipleChoice")
-            .child(loginUser.toString())
-            .setValue(correctCount).addOnSuccessListener {
-                Toast.makeText(this, "Ok", Toast.LENGTH_SHORT).show()
-            }
+            .child(topicId)
+            .addValueEventListener(object : ValueEventListener{
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    if (snapshot.hasChild(game)) {
+                        val readDatabaseReference = FirebaseDatabase.getInstance().getReference("users")
+                            .child(username)
+                            .child("topics")
+                            .child(topicId)
+                            .child(game)
+                            .addValueEventListener(object : ValueEventListener {
+                                override fun onDataChange(snapshot: DataSnapshot) {
+                                    snapshot.children.forEach {userSnapshot ->
+                                        if (userSnapshot.key.toString() == loginUser) {
+                                            if (correctCount > userSnapshot.value.toString().toInt()) {
+                                                val databaseReference = FirebaseDatabase.getInstance().getReference("users")
+                                                    .child(username)
+                                                    .child("topics")
+                                                    .child(topicId).child(game)
+                                                    .child(loginUser.toString())
+                                                    .setValue(correctCount).addOnSuccessListener {
+                                                    }
+                                            } else {
+
+                                            }
+                                        } else {
+                                            val databaseReference = FirebaseDatabase.getInstance().getReference("users")
+                                                .child(username)
+                                                .child("topics")
+                                                .child(topicId).child(game)
+                                                .child(loginUser.toString())
+                                                .setValue(correctCount).addOnSuccessListener {
+                                                }
+                                        }
+                                    }
+                                }
+
+                                override fun onCancelled(error: DatabaseError) {
+                                    TODO("Not yet implemented")
+                                }
+
+                            })
+                    }
+                    else {
+                        val databaseReference = FirebaseDatabase.getInstance().getReference("users")
+                            .child(username)
+                            .child("topics")
+                            .child(topicId).child(game)
+                            .child(loginUser.toString())
+                            .setValue(correctCount).addOnSuccessListener {
+                            }
+                    }
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    TODO("Not yet implemented")
+                }
+
+            })
+
+
     }
+
+
 }

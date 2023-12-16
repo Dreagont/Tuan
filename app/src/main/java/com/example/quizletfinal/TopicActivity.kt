@@ -53,6 +53,7 @@ class TopicActivity : AppCompatActivity(), OnItemClickListener, TextToSpeech.OnI
         editable = intent.getBooleanExtra("editable", false)
         loginUser = intent.getStringExtra("loginUser")
 
+
         if (receivedTopic != null) {
             cardList = ArrayList(receivedTopic!!.cards.values)
             deleteButton = findViewById(R.id.btnDeleteTopic)

@@ -67,9 +67,9 @@ class MultiChoiceActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         isEnglish = intent.getIntExtra("isEnglish",3)
         isInstant = intent.getIntExtra("isInstant",3)
         isSpeech = intent.getIntExtra("isSpeech",3)
+
         username = intent.getStringExtra("username").toString()
         topicId = intent.getStringExtra("topicId").toString()
-
         loginUser = intent.getStringExtra("loginUser")
 
         loadTerm(cardList[currentIndex])

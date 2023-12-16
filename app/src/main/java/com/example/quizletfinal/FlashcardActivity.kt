@@ -3,6 +3,8 @@ package com.example.quizletfinal
 import android.animation.AnimatorInflater
 import android.animation.AnimatorSet
 import android.os.Bundle
+import android.speech.tts.TextToSpeech
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.ImageView
@@ -12,8 +14,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
 import com.example.quizletfinal.models.Card
 import com.example.quizletfinal.models.Topic
+import java.util.Locale
 
-class FlashcardActivity : AppCompatActivity() {
+class FlashcardActivity : AppCompatActivity() , TextToSpeech.OnInitListener {
     private lateinit var receivedTopic: Topic
     private lateinit var cards: List<Card>
     private var currentCardIndex = 0
@@ -25,6 +28,7 @@ class FlashcardActivity : AppCompatActivity() {
     private lateinit var backButton: ImageView
     private lateinit var playButton: ImageView
     private lateinit var nextButton: ImageView
+    private lateinit var textToSpeech: TextToSpeech
 
     private lateinit var flipFrontAnimator: AnimatorSet
     private lateinit var flipBackAnimator: AnimatorSet
@@ -73,16 +77,17 @@ class FlashcardActivity : AppCompatActivity() {
         cardViewBack.setOnClickListener {
             flipCard()
         }
+        textToSpeech = TextToSpeech(this, this)
 
         nextButton.setOnClickListener { nextCard() }
         backButton.setOnClickListener { previousCard() }
-        playButton.setOnClickListener { flipCard() }
         closeButton.setOnClickListener { finish() }
     }
 
     private fun loadCard(card: Card) {
         frontCardText.text = card.english
         backCardText.text = card.vietnamese
+        playButton.setOnClickListener { speakText(card) }
         updateUI()
         resetCardView()
     }
@@ -145,5 +150,34 @@ class FlashcardActivity : AppCompatActivity() {
     private fun showToastAndFinish() {
         Toast.makeText(this, "You have learned all the ${receivedTopic.title}!", Toast.LENGTH_LONG).show()
         finish()
+    }
+
+    private fun speakText(card: Card) {
+        if (isFront) {
+            textToSpeech.speak(card.english, TextToSpeech.QUEUE_FLUSH, null, null)
+        } else {
+            textToSpeech.speak(card.vietnamese, TextToSpeech.QUEUE_FLUSH, null, null)
+        }
+    }
+
+    override fun onDestroy() {
+        if (textToSpeech.isSpeaking) {
+            textToSpeech.stop()
+        }
+        textToSpeech.shutdown()
+
+        super.onDestroy()
+    }
+
+    override fun onInit(status: Int) {
+        if (status == TextToSpeech.SUCCESS) {
+            val result = textToSpeech.setLanguage(Locale.US)
+
+            if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
+                Log.e("TextToSpeech", "Language is not supported")
+            }
+        } else {
+            Log.e("TextToSpeech", "Initialization failed")
+        }
     }
 }

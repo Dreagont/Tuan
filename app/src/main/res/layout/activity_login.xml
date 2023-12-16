@@ -27,6 +27,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:id="@+id/txtUsername"
+        android:text="@gmail.com"
         android:textColorHint="#54000000"
         android:hint="Enter your email"/>
 
@@ -44,6 +45,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:id="@+id/txtPassword"
+        android:inputType="textPassword"
         android:textColorHint="#54000000"
         android:hint="Enter your password"/>
 
