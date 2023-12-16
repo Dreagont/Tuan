@@ -87,7 +87,7 @@ class MainFragment : Fragment(), OnItemClickListener {
         progressDialog.show()
 
         FirebaseDatabase.getInstance().getReference("users")
-            .addListenerForSingleValueEvent(object : ValueEventListener {
+            .addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
                     val updatedTopics = mutableListOf<Topic>()
 
