@@ -54,7 +54,7 @@ class LibraryFragment : Fragment(),OnItemClickListener {
         folderList.layoutManager = LinearLayoutManager(requireContext())
 
         val sharedPreferences = requireActivity().getSharedPreferences("UserDetails", Context.MODE_PRIVATE)
-        val username = sharedPreferences.getString("Username", "No Username")
+        val username = sharedPreferences.getString("username", "No Username")
         val email = sharedPreferences.getString("Email", "No Email")
 
         if (email != null) username?.let { loadFolders(it) }
@@ -115,9 +115,14 @@ class LibraryFragment : Fragment(),OnItemClickListener {
     override fun onItemClickListener(folder: Folder) {
         val intent = Intent(requireContext(), FolderActivity::class.java)
         intent.putExtra("folderData", folder)
+        intent.putExtra("editable", true)
         startActivity(intent)    }
 
     override fun onItemClickListener(card: Card) {
+        TODO("Not yet implemented")
+    }
+
+    override fun onItemLongClickListener(card: Card) {
         TODO("Not yet implemented")
     }
 }

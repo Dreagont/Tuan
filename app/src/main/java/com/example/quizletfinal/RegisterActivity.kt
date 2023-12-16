@@ -1,13 +1,12 @@
 package com.example.quizletfinal
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.util.Patterns
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import com.example.quizletfinal.models.User
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
@@ -68,9 +67,9 @@ class RegisterActivity : AppCompatActivity() {
             })
     }
 
-    private fun addUserToDatabase(uid: String, username: String, email: String) {
+    private fun addUserToDatabase(username: String, email: String) {
         val user = User(username, email, "Default.jpg")
-        FirebaseDatabase.getInstance().reference.child("users").child(uid).setValue(user)
+        FirebaseDatabase.getInstance().reference.child("users").child(username).setValue(user)
     }
     private fun validateInput(email: String, password: String, confirmPassword: String): Boolean {
         return when {
@@ -101,9 +100,7 @@ class RegisterActivity : AppCompatActivity() {
                     firebaseUser?.sendEmailVerification()
                         ?.addOnCompleteListener { verificationTask ->
                             if (verificationTask.isSuccessful) {
-                                firebaseUser.uid?.let { uid ->
-                                    addUserToDatabase(uid, username, email)
-                                }
+                                addUserToDatabase(username, email)
                                 updateUI(auth.currentUser)
                                 showMessage("Registered successfully. Please check your email for verification.")
                             } else {

@@ -2,7 +2,6 @@ package com.example.quizletfinal.adapters
 
 import android.animation.AnimatorInflater
 import android.animation.AnimatorSet
-import android.animation.ObjectAnimator
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
@@ -17,7 +16,7 @@ class CardAdapter(private val context: Context,
                   private val cardList: List<Card>,
                   private var onItemClickListener: OnItemClickListener
 ) : RecyclerView.Adapter<CardAdapter.ViewHolder>() {
-    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val frontCard: TextView = itemView.findViewById(R.id.frontCard)
         val backCard: TextView = itemView.findViewById(R.id.backCard)
 
@@ -42,6 +41,15 @@ class CardAdapter(private val context: Context,
             itemView.setOnClickListener {
                 flip()
             }
+
+            itemView.setOnLongClickListener {
+                val position = adapterPosition
+                if (position != RecyclerView.NO_POSITION) {
+                    val card = cardList[position]
+                    onItemClickListener.onItemLongClickListener(card)
+                }
+                true
+            }
         }
 
         private fun flip() {
@@ -55,7 +63,6 @@ class CardAdapter(private val context: Context,
                 isFront = true
             }
         }
-
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
