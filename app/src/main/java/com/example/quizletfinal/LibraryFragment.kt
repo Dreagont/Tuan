@@ -55,9 +55,10 @@ class LibraryFragment : Fragment(),OnItemClickListener {
 
         val sharedPreferences = requireActivity().getSharedPreferences("UserDetails", Context.MODE_PRIVATE)
         val username = sharedPreferences.getString("username", "No Username")
-        val email = sharedPreferences.getString("Email", "No Email")
 
-        if (email != null) username?.let { loadFolders(it) }
+        if (username != null) {
+            username.let { loadFolders(it) }
+        }
 
         btnOpenAddFoder.setOnClickListener {
             activity?.let {
@@ -123,6 +124,14 @@ class LibraryFragment : Fragment(),OnItemClickListener {
     }
 
     override fun onItemLongClickListener(card: Card) {
+        TODO("Not yet implemented")
+    }
+
+    override fun onItemDeleteListener(topic: Topic) {
+        TODO("Not yet implemented")
+    }
+
+    override fun onItemMoveListener(topic: Topic) {
         TODO("Not yet implemented")
     }
 }

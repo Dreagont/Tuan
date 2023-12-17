@@ -17,8 +17,8 @@
             android:orientation="vertical"
             android:padding="18dp"
             android:background="@drawable/main_header"
-            app:layout_constraintTop_toTopOf="parent"
-            >
+            app:layout_constraintTop_toTopOf="parent">
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -34,15 +34,15 @@
                 android:iconifiedByDefault="false"
                 android:queryBackground="@android:color/transparent"
                 android:queryHint="Enter username"
-                android:layout_marginBottom="70dp"
-                />
+                android:layout_marginBottom="70dp"/>
+
         </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="220dp"
-        >
+        android:layout_marginTop="220dp">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -62,12 +62,12 @@
                 android:layout_marginTop="10dp"
                 tools:listitem="@layout/topic_layout"
                 android:id="@+id/otherTopicList"/>
+
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:id="@+id/ifNoTopic"
-                >
+                android:id="@+id/ifNoTopic">
 
             </LinearLayout>
         </LinearLayout>

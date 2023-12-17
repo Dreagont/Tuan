@@ -163,6 +163,7 @@ class MainFragment : Fragment(), OnItemClickListener {
     override fun onItemClickListener(topic: Topic) {
         val intent = Intent(requireContext(), TopicActivity::class.java)
         intent.putExtra("topicData", topic)
+        intent.putExtra("editable", false)
         intent.putExtra("loginUser",loginUser)
         startActivity(intent)
     }
@@ -176,6 +177,14 @@ class MainFragment : Fragment(), OnItemClickListener {
     }
 
     override fun onItemLongClickListener(card: Card) {
+        TODO("Not yet implemented")
+    }
+
+    override fun onItemDeleteListener(topic: Topic) {
+        TODO("Not yet implemented")
+    }
+
+    override fun onItemMoveListener(topic: Topic) {
         TODO("Not yet implemented")
     }
 

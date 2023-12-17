@@ -14,6 +14,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.quizletfinal.models.Card
+import com.example.quizletfinal.models.Folder
 import com.example.quizletfinal.models.Topic
 import com.google.firebase.database.FirebaseDatabase
 
@@ -24,8 +25,8 @@ class AddTopicActivity : AppCompatActivity() {
     private lateinit var visibilityRadioGroup: RadioGroup
     private lateinit var addCardTextView: TextView
     private lateinit var submitButton: Button
-
     private lateinit var cardContainer: LinearLayout
+    private var receivedFolder: Folder? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_topic)
@@ -40,6 +41,7 @@ class AddTopicActivity : AppCompatActivity() {
 
         val sharedPreferences = this.getSharedPreferences("UserDetails", Context.MODE_PRIVATE)
         val username = sharedPreferences.getString("username", "No Username")
+        receivedFolder = intent.getParcelableExtra("folderData")
 
         val cardList: ArrayList<Card>? = intent.getParcelableArrayListExtra("csvReadCardList")
 
@@ -92,7 +94,6 @@ class AddTopicActivity : AppCompatActivity() {
 
                 val cardMap = mutableMapOf<String, Card>()
 
-                // Add cards from the CSV file
                 for (card in cardList) {
                     cardMap[card.english] = card
                 }
@@ -156,9 +157,24 @@ class AddTopicActivity : AppCompatActivity() {
     }
 
     private fun saveTopic(topic: Topic, username: String) {
-        val databaseReference = FirebaseDatabase.getInstance().getReference("users").child(username).child("topics")
+        val userRef = FirebaseDatabase.getInstance().getReference("users").child(username)
 
-        databaseReference.child(topic.id!!).setValue(topic)
+        val foldersTopicsRef = receivedFolder?.id?.let {
+            userRef.child("folders").child(it).child("topics").child(topic.id!!)
+        }
+
+        val topicsRef = userRef.child("topics").child(topic.id!!)
+
+        if (foldersTopicsRef != null) {
+            foldersTopicsRef.setValue(topic)
+                .addOnSuccessListener {
+                }
+                .addOnFailureListener {
+                    Toast.makeText(this, "Failed to add topic to folders", Toast.LENGTH_SHORT).show()
+                }
+        }
+
+        topicsRef.setValue(topic)
             .addOnSuccessListener {
                 finish()
                 Toast.makeText(this, "Topic added successfully", Toast.LENGTH_SHORT).show()
@@ -167,4 +183,5 @@ class AddTopicActivity : AppCompatActivity() {
                 Toast.makeText(this, "Failed to add topic", Toast.LENGTH_SHORT).show()
             }
     }
+
 }

@@ -9,16 +9,16 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/btnOpenTopic"
-        android:orientation="horizontal"
-        >
+        android:orientation="horizontal">
+
         <ImageView
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_marginLeft="5dp"
             android:layout_marginBottom="5dp"
             android:layout_marginTop="5dp"
-            android:src="@drawable/topic_icon"
-            />
+            android:src="@drawable/topic_icon"/>
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_gravity="center"
@@ -28,18 +28,7 @@
             android:textSize="30dp"
             android:layout_height="wrap_content"
             android:text="Topic name"/>
-        <View
-            android:layout_width="0dp"
-            android:layout_height="1dp"
-            android:layout_weight="@integer/material_motion_duration_long_1"/>
-        <ImageView
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_gravity="center"
-            android:layout_marginRight="20dp"
-            android:src="@drawable/option_icon"/>
+
+
     </LinearLayout>
-
-
-
 </LinearLayout>

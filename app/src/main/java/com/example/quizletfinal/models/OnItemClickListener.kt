@@ -5,4 +5,6 @@ interface OnItemClickListener {
     fun onItemClickListener(folder: Folder)
     fun onItemClickListener(card: Card)
     fun onItemLongClickListener(card: Card)
+    fun onItemDeleteListener(topic: Topic)
+    fun onItemMoveListener(topic: Topic)
 }

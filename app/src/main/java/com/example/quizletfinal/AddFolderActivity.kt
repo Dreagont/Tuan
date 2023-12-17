@@ -1,12 +1,11 @@
 package com.example.quizletfinal
 
 import android.content.Context
-import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import com.example.quizletfinal.models.Folder
 import com.google.firebase.database.FirebaseDatabase
 
@@ -29,7 +28,7 @@ class AddFolderActivity : AppCompatActivity() {
         }
 
         val sharedPreferences = this.getSharedPreferences("UserDetails", Context.MODE_PRIVATE)
-        val username = sharedPreferences.getString("Username", "No Username")
+        val username = sharedPreferences.getString("username", "No Username")
 
 
         addButton.setOnClickListener {

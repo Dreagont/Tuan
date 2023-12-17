@@ -7,7 +7,9 @@ import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.PopupMenu
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
@@ -20,13 +22,16 @@ import com.example.quizletfinal.models.Folder
 import com.example.quizletfinal.models.OnItemClickListener
 import com.example.quizletfinal.models.Topic
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import java.util.Locale
 
-class TopicActivity : AppCompatActivity(), OnItemClickListener, TextToSpeech.OnInitListener { //here
+class TopicActivity : AppCompatActivity(), OnItemClickListener, TextToSpeech.OnInitListener {
     private lateinit var textToSpeech: TextToSpeech
     private lateinit var auth: FirebaseAuth
-    private lateinit var deleteButton: TextView
+    private lateinit var optionMenu: ImageView
     private lateinit var closeButton: Button
     private lateinit var topicName: TextView
     private lateinit var userName: TextView
@@ -56,7 +61,7 @@ class TopicActivity : AppCompatActivity(), OnItemClickListener, TextToSpeech.OnI
 
         if (receivedTopic != null) {
             cardList = ArrayList(receivedTopic!!.cards.values)
-            deleteButton = findViewById(R.id.btnDeleteTopic)
+            optionMenu = findViewById(R.id.option_menu)
             closeButton = findViewById(R.id.btnClose)
             topicName = findViewById(R.id.txtTopicName)
             userName = findViewById(R.id.txtUsername)
@@ -77,7 +82,6 @@ class TopicActivity : AppCompatActivity(), OnItemClickListener, TextToSpeech.OnI
             }
 
             if (editable) {
-                deleteButton.visibility = View.VISIBLE
                 topicName.setOnClickListener {
                     receivedTopic!!.id?.let { it1 ->
                         showEditDialog("title",
@@ -91,12 +95,9 @@ class TopicActivity : AppCompatActivity(), OnItemClickListener, TextToSpeech.OnI
                             it1, topicDescriptionView.text.toString())
                     }
                 }
-            } else {
-                deleteButton.visibility = View.GONE
             }
 
             username = receivedTopic!!.username.toString()
-            val username = receivedTopic!!.username
             val topicNameText =  receivedTopic!!.title
             val topicDescription = receivedTopic!!.description
             val termNumberValue = receivedTopic!!.cards.size
@@ -144,16 +145,54 @@ class TopicActivity : AppCompatActivity(), OnItemClickListener, TextToSpeech.OnI
                 startActivity(intent)
             }
 
-            deleteButton.setOnClickListener {
-                val topicId = receivedTopic!!.id
-                if (topicId != null) {
-                    showConfirmationDialog(topicId)
-                }
+            optionMenu.setOnClickListener { view ->
+                showOptionMenu(view)
             }
 
         } else {
             Toast.makeText(this, "No Topic data received", Toast.LENGTH_SHORT).show()
         }
+    }
+
+    private fun showOptionMenu(view: View) {
+        val popup = PopupMenu(this, view)
+        if (editable) {
+            popup.menuInflater.inflate(R.menu.topic_options_editable, popup.menu)
+        } else {
+            popup.menuInflater.inflate(R.menu.topic_options_uneditable, popup.menu)
+        }
+        popup.setOnMenuItemClickListener { item ->
+            when (item.itemId) {
+                R.id.delete_topic -> {
+                    receivedTopic?.id?.let { topicId ->
+                        showConfirmationDialog(topicId) { confirmedTopicId ->
+                            deleteTopic(confirmedTopicId)
+                        }
+                    }
+                    true
+                }
+                R.id.move_topic -> {
+                    receivedTopic?.id?.let { topicId ->
+                        Toast.makeText(this, "Move folder click", Toast.LENGTH_SHORT).show()
+                    }
+                    true
+                }
+                else -> false
+            }
+        }
+        popup.show()
+    }
+
+    private fun showConfirmationDialog(topicId: String, onConfirm: (String) -> Unit) {
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("Confirm Deletion")
+        builder.setMessage("Are you sure you want to delete this topic?")
+        builder.setPositiveButton("Delete") { dialog, _ ->
+            onConfirm(topicId)
+            dialog.dismiss()
+        }
+        builder.setNegativeButton("Cancel", null)
+        builder.show()
     }
 
     private fun showEditDialog(field: String, topicId: String, currentValue: String) {
@@ -174,6 +213,7 @@ class TopicActivity : AppCompatActivity(), OnItemClickListener, TextToSpeech.OnI
         builder.show()
     }
 
+
     private fun updateTopic(field: String, topicId: String, newValue: String) {
         val topicReference = FirebaseDatabase.getInstance().getReference("users").child(username).child("topics").child(topicId)
         val updateMap = hashMapOf<String, Any>(field to newValue)
@@ -191,43 +231,46 @@ class TopicActivity : AppCompatActivity(), OnItemClickListener, TextToSpeech.OnI
             }
     }
 
-    private fun showConfirmationDialog(topicId: String) {
-        val builder = AlertDialog.Builder(this)
-        builder.setTitle("Confirm Deletion")
-        builder.setMessage("Are you sure you want to delete this topic?")
-
-        builder.setPositiveButton("Delete") { dialog, _ ->
-            deleteTopicFromFirebase(topicId)
-            dialog.dismiss()
+    private fun deleteTopic(topicId: String) {
+        val TopicRef = FirebaseDatabase.getInstance().getReference("users").child(username).child("topics").child(topicId)
+        TopicRef.removeValue().addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                showMessage("Topic deleted successfully.")
+            } else {
+                showMessage("Failed to delete topic from topics: ${task.exception?.message}")
+            }
         }
 
-        builder.setNegativeButton("Cancel") { dialog, _ ->
-            dialog.dismiss()
-        }
+        val foldersRef = FirebaseDatabase.getInstance().getReference("users").child(username).child("folders")
+        foldersRef.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                for (folderSnapshot in dataSnapshot.children) {
+                    val folderTopicsRef = folderSnapshot.child("topics").child(topicId).ref
+                    folderTopicsRef.addListenerForSingleValueEvent(object : ValueEventListener {
+                        override fun onDataChange(topicSnapshot: DataSnapshot) {
+                            if (topicSnapshot.exists()) {
+                                folderTopicsRef.removeValue().addOnCompleteListener { task ->
+                                    if (task.isSuccessful) {
+                                        showMessage("Topic deleted successfully.")
+                                    } else {
+                                        showMessage("Failed to delete topic from folder")
+                                    }
+                                }
+                            }
+                        }
 
-        val dialog = builder.create()
-        dialog.show()
-    }
-
-    private fun deleteTopicFromFirebase(topicId: String) {
-        val currentUser = auth.currentUser
-        val username = receivedTopic?.username
-
-        if (currentUser != null && username != null) {
-            val userReference = FirebaseDatabase.getInstance().getReference("users")
-            val topicReference = userReference.child(username).child("topics").child(topicId)
-
-            topicReference.removeValue()
-                .addOnSuccessListener {
-                    showMessage("Topic deleted successfully")
-                    finish()
+                        override fun onCancelled(databaseError: DatabaseError) {
+                            showMessage("Failed to delete topic from folder")
+                        }
+                    })
                 }
-                .addOnFailureListener { e ->
-                    showMessage("Failed to delete topic: ${e.message}")
-                }
-        } else {
-            showMessage("User not authenticated or topic data not found")
-        }
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) {
+                showMessage("Database error: ${databaseError.message}")
+            }
+        })
+
     }
 
     private fun showMessage(message: String) {
@@ -252,14 +295,22 @@ class TopicActivity : AppCompatActivity(), OnItemClickListener, TextToSpeech.OnI
                 setTitle("Confirm Delete")
                 setMessage("Are you sure you want to delete this card?")
                 setPositiveButton("Delete") { dialog, which ->
-                    deleteCardFromFirebase(card)
+                    deleteCard(card)
                 }
                 setNegativeButton("Cancel", null)
             }.create().show()
         }
     }
 
-    private fun deleteCardFromFirebase(card: Card) {
+    override fun onItemDeleteListener(topic: Topic) {
+        TODO("Not yet implemented")
+    }
+
+    override fun onItemMoveListener(topic: Topic) {
+        TODO("Not yet implemented")
+    }
+
+    private fun deleteCard(card: Card) {
 
         val topicId = receivedTopic?.id ?: return
         val cardIndex = cardList.indexOf(card)

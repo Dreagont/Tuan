@@ -14,14 +14,21 @@ import java.util.Locale
 
 class TopicAdapter(
     private val context: Context,
-    private var topicList: MutableList<Topic>,
+    var topicList: MutableList<Topic>,
     private val onItemClickListener: OnItemClickListener
 ) : RecyclerView.Adapter<TopicAdapter.ViewHolder>(), Filterable {
 
     private val topicListFull = topicList.toList()
 
-    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val titleTextView: TextView = itemView.findViewById(R.id.txtTopicName)
+
+        fun bind(topic: Topic) {
+            titleTextView.text = topic.title
+            itemView.setOnClickListener {
+                onItemClickListener.onItemClickListener(topic)
+            }
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -31,10 +38,7 @@ class TopicAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val topic = topicList[position]
-        holder.titleTextView.text = topic.title
-        holder.itemView.setOnClickListener {
-            onItemClickListener.onItemClickListener(topic)
-        }
+        holder.bind(topic)
     }
 
     override fun getItemCount(): Int {

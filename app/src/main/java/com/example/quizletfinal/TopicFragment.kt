@@ -33,6 +33,7 @@ class TopicFragment : Fragment() ,OnItemClickListener {
     private lateinit var ifNoTopic : LinearLayout
     private lateinit var progressDialog: ProgressDialog
     private val handler = Handler(Looper.getMainLooper())
+    private lateinit var username: String
     var loginUser: String? = ""
     val topics = mutableListOf<Topic>()
 
@@ -61,13 +62,11 @@ class TopicFragment : Fragment() ,OnItemClickListener {
 
         myTopicList.layoutManager = LinearLayoutManager(requireContext())
         val sharedPreferences = requireActivity().getSharedPreferences("UserDetails", Context.MODE_PRIVATE)
-        val username = sharedPreferences.getString("username", "No Username")
+        username = sharedPreferences.getString("username", "No Username") ?: "No Username"
         loginUser = sharedPreferences.getString("loginUsername", "No Username")
 
 
-        if (username != null) {
-            loadTopic(username)
-        };
+        loadTopic(username)
 
         btnOpenAddTopic.setOnClickListener {
             activity?.let {
@@ -135,6 +134,7 @@ class TopicFragment : Fragment() ,OnItemClickListener {
         intent.putExtra("topicData", topic)
         intent.putExtra("loginUser",loginUser)
         intent.putExtra("editable", true)
+        intent.putExtra("fromTopicFragment", true)
         startActivity(intent)
     }
 
@@ -147,6 +147,14 @@ class TopicFragment : Fragment() ,OnItemClickListener {
     }
 
     override fun onItemLongClickListener(card: Card) {
+        TODO("Not yet implemented")
+    }
+
+    override fun onItemDeleteListener(topic: Topic) {
+        TODO("Not yet implemented")
+    }
+
+    override fun onItemMoveListener(topic: Topic) {
         TODO("Not yet implemented")
     }
 
