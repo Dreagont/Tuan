@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/move_topic"
-        android:title="Move to folder" />
-    <item
         android:id="@+id/delete_topic"
         android:title="Delete" />
+    <item
+        android:id="@+id/change_visibility"
+        android:title="Change visibility"/>
 </menu>

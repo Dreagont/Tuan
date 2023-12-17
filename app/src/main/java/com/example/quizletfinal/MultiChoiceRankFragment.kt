@@ -1,13 +1,10 @@
 package com.example.quizletfinal
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
-import android.widget.ListView
-import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.quizletfinal.adapters.LeaderBoardAdapter
@@ -16,18 +13,12 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
 
-/**
- * A simple [Fragment] subclass.
- * Use the [MultiChoiceRankFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
+
 class MultiChoiceRankFragment : Fragment() {
-    // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
     lateinit var multiRankList : RecyclerView
@@ -48,7 +39,6 @@ class MultiChoiceRankFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_multi_choice_rank, container, false)
         multiRankList = view.findViewById(R.id.multiRankList)
         multiRankList.layoutManager = LinearLayoutManager(requireContext())
-        // Get the values from arguments
         val id = arguments?.getString(ARG_PARAM1)
         val username = arguments?.getString(ARG_PARAM2)
 
@@ -70,13 +60,11 @@ class MultiChoiceRankFragment : Fragment() {
 
                 dataList.sortByDescending { it.second }
                 val adapter = LeaderBoardAdapter(requireContext(),dataList)
-                // Set the adapter to the ListView
                 multiRankList.adapter = adapter
                 adapter.notifyDataSetChanged()
             }
 
             override fun onCancelled(databaseError: DatabaseError) {
-                // Handle error
             }
         })
 
@@ -84,15 +72,6 @@ class MultiChoiceRankFragment : Fragment() {
     }
 
     companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment MultiChoiceRankFragment.
-         */
-        // TODO: Rename and change types and number of parameters
         @JvmStatic
         fun newInstance(param1: String, param2: String) =
             MultiChoiceRankFragment().apply {

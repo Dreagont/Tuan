@@ -1,21 +1,20 @@
 package com.example.quizletfinal
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.speech.tts.TextToSpeech
 import android.util.Log
 import android.view.KeyEvent
 import android.widget.Button
 import android.widget.EditText
-import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
-import androidx.core.widget.addTextChangedListener
+import androidx.appcompat.app.AppCompatActivity
 import com.example.quizletfinal.models.Card
 import java.util.Locale
 
 class WrittenTestActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
+    private lateinit var closeButton: Button
     lateinit var cardTerm : TextView
     lateinit var txtUserInput : EditText
     lateinit var btnSkip : TextView
@@ -41,14 +40,12 @@ class WrittenTestActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
         cardList = intent.getSerializableExtra("cardList") as ArrayList<Card>
 
+        closeButton = findViewById(R.id.btnClose)
         cardTerm = findViewById(R.id.cardTerm)
         txtUserInput = findViewById(R.id.txtUserInput)
         btnSkip = findViewById(R.id.btnSkip)
         listLenght = findViewById(R.id.totalTerm)
 
-        findViewById<ImageView>(R.id.btnClose).setOnClickListener {
-            finish()
-        }
 
         listLenght.text = cardList.size.toString()
 
@@ -72,9 +69,9 @@ class WrittenTestActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
                     moveToNextCard(cardList)
                     txtUserInput.text.clear()
                 }
-                return@setOnKeyListener true // Consume the event
+                return@setOnKeyListener true
             }
-            false // Let the event be handled normally
+            false
         }
 
         btnSkip.setOnClickListener {
@@ -83,6 +80,8 @@ class WrittenTestActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
             selectedAnswers.add("")
             moveToNextCard(cardList)
         }
+
+        closeButton.setOnClickListener { finish() }
 
     }
     private fun validateAnswer(text: CharSequence?, card: Card) {
@@ -172,5 +171,4 @@ class WrittenTestActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
         super.onDestroy()
     }
-
 }

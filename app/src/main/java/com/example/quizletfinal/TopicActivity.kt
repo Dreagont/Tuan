@@ -81,6 +81,8 @@ class TopicActivity : AppCompatActivity(), OnItemClickListener, TextToSpeech.OnI
                 startActivity(intent)
             }
 
+            optionMenu.visibility = if (editable) View.VISIBLE else View.GONE
+
             if (editable) {
                 topicName.setOnClickListener {
                     receivedTopic!!.id?.let { it1 ->
@@ -171,16 +173,51 @@ class TopicActivity : AppCompatActivity(), OnItemClickListener, TextToSpeech.OnI
                     }
                     true
                 }
-                R.id.move_topic -> {
-                    receivedTopic?.id?.let { topicId ->
-                        Toast.makeText(this, "Move folder click", Toast.LENGTH_SHORT).show()
-                    }
+                R.id.change_visibility -> {
+                    showVisibilityDialog()
                     true
                 }
                 else -> false
             }
         }
         popup.show()
+    }
+
+    private enum class Visibility(val value: String) {
+        PUBLIC("public"),
+        PRIVATE("private")
+    }
+
+    private fun showVisibilityDialog() {
+        val options = arrayOf("public", "private")
+        var selectedVisibility = receivedTopic?.visibility ?: Visibility.PUBLIC.value
+
+        var selectedOptionIndex = options.indexOfFirst { it.equals(selectedVisibility, ignoreCase = true) }
+        if(selectedOptionIndex == -1) selectedOptionIndex = 0
+
+        AlertDialog.Builder(this)
+            .setTitle("Change Visibility")
+            .setSingleChoiceItems(options, selectedOptionIndex) { _, which ->
+                selectedVisibility = options[which]
+            }
+            .setPositiveButton("OK") { _, _ ->
+                updateTopicVisibility(selectedVisibility)
+            }
+            .setNegativeButton("Cancel", null)
+            .show()
+    }
+
+    private fun updateTopicVisibility(selectedVisibility: String) {
+        receivedTopic?.id?.let { topicId ->
+            val topicRef = FirebaseDatabase.getInstance().getReference("users").child(username).child("topics").child(topicId)
+            val updateMap = hashMapOf<String, Any>("visibility" to selectedVisibility)
+
+            topicRef.updateChildren(updateMap).addOnSuccessListener {
+                Toast.makeText(this, "Visibility updated to $selectedVisibility.", Toast.LENGTH_SHORT).show()
+            }.addOnFailureListener { e ->
+                Toast.makeText(this, "Failed to update visibility: ${e.localizedMessage}", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 
     private fun showConfirmationDialog(topicId: String, onConfirm: (String) -> Unit) {
@@ -235,7 +272,7 @@ class TopicActivity : AppCompatActivity(), OnItemClickListener, TextToSpeech.OnI
         val TopicRef = FirebaseDatabase.getInstance().getReference("users").child(username).child("topics").child(topicId)
         TopicRef.removeValue().addOnCompleteListener { task ->
             if (task.isSuccessful) {
-                showMessage("Topic deleted successfully.")
+                showMessage("Topic deleted successfully")
             } else {
                 showMessage("Failed to delete topic from topics: ${task.exception?.message}")
             }
@@ -251,7 +288,8 @@ class TopicActivity : AppCompatActivity(), OnItemClickListener, TextToSpeech.OnI
                             if (topicSnapshot.exists()) {
                                 folderTopicsRef.removeValue().addOnCompleteListener { task ->
                                     if (task.isSuccessful) {
-                                        showMessage("Topic deleted successfully.")
+                                        showMessage("Topic deleted successfully from folder")
+                                        finish()
                                     } else {
                                         showMessage("Failed to delete topic from folder")
                                     }
