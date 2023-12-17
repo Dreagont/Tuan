@@ -1,18 +1,20 @@
 package com.example.quizletfinal
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.speech.tts.TextToSpeech
 import android.util.Log
+import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
 import com.example.quizletfinal.models.Card
 import com.example.quizletfinal.models.extendedCardList
 import java.util.Locale
 
 class MultiChoiceActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
+    private lateinit var closeButton: Button
     private lateinit var btnAnswerA : CardView
     private lateinit var btnAnswerB : CardView
     private lateinit var btnAnswerC : CardView
@@ -47,6 +49,8 @@ class MultiChoiceActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         setContentView(R.layout.activity_multi_choice)
 
         cardList = intent.getSerializableExtra("cardList") as ArrayList<Card>
+
+        closeButton = findViewById(R.id.btnClose)
 
         frontCard = findViewById(R.id.frontCard)
         backCard = findViewById(R.id.backCard)
@@ -94,7 +98,7 @@ class MultiChoiceActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
             moveToNextCard(cardList)
         }
 
-
+        closeButton.setOnClickListener { finish() }
     }
 
     private fun validateAnswer(text: CharSequence?, card: Card) {
