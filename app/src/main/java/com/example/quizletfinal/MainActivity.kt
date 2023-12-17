@@ -63,16 +63,13 @@ class MainActivity : AppCompatActivity() {
                         break
                     }
                 }
-                // Log the result
                 if (username != null) {
                     Log.d("FirebaseData", username)
                 }
 
-                // Show a toast with the result
             }
 
             override fun onCancelled(databaseError: DatabaseError) {
-                // Getting data failed, log a message
                 Log.w("FirebaseData", "loadPost:onCancelled", databaseError.toException())
             }
         })
@@ -130,7 +127,6 @@ class MainActivity : AppCompatActivity() {
     fun readWithEmail(currentMail: String?, valueEventListener: ValueEventListener) {
         val databaseReference = FirebaseDatabase.getInstance().getReference("users")
 
-        // Use addListenerForSingleValueEvent for a one-time read
         databaseReference.addListenerForSingleValueEvent(valueEventListener)
     }
 

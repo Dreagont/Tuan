@@ -87,22 +87,23 @@ class TestSettingActivity : AppCompatActivity() {
                 cardList =  cardList.shuffled()
             }
 
-            if (testCount.text.toString().toInt() > cardList.size) {
+            if (testCount.text.toString().toInt() > cardList.size || testCount.text.toString().toInt() < 1) {
                 Toast.makeText(applicationContext, "Invalid length", Toast.LENGTH_SHORT).show()
             } else{
                 cardList = cardList.take(testCount.text.toString().toInt())
+                intent = Intent(this, if (game == "multi") MultiChoiceActivity::class.java else WrittenTestActivity::class.java)
+                intent.putExtra("cardList",ArrayList(cardList))
+                intent.putExtra("isEnglish",isEnglish)
+                intent.putExtra("isInstant",isInstant)
+                intent.putExtra("isSpeech",isSpeech)
+                intent.putExtra("username",username)
+                intent.putExtra("topicId",topicId)
+                intent.putExtra("loginUser",loginUser)
+                intent.putExtra("topicName",txtTopicName.text.toString())
+                startActivity(intent)
+                finish()
             }
-            intent = Intent(this, if (game == "multi") MultiChoiceActivity::class.java else WrittenTestActivity::class.java)
-            intent.putExtra("cardList",ArrayList(cardList))
-            intent.putExtra("isEnglish",isEnglish)
-            intent.putExtra("isInstant",isInstant)
-            intent.putExtra("isSpeech",isSpeech)
-            intent.putExtra("username",username)
-            intent.putExtra("topicId",topicId)
-            intent.putExtra("loginUser",loginUser)
-            intent.putExtra("topicName",txtTopicName.text.toString())
-            startActivity(intent)
-            finish()
+
         }
     }
 }

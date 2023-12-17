@@ -111,26 +111,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:id="@+id/btnAbout"
-            android:clickable="true">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="About"
-                android:textStyle="bold"
-                android:textColor="@color/black"
-                android:textSize="18dp"/>
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
             android:clickable="true">
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Version"
-                android:layout_marginTop="30dp"
+                android:layout_marginTop="10dp"
                 android:textStyle="bold"
                 android:textColor="@color/black"
                 android:textSize="18dp"/>
