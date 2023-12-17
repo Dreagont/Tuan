@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.speech.tts.TextToSpeech
 import android.util.Log
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.cardview.widget.CardView
@@ -60,6 +61,10 @@ class MultiChoiceActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         txtAnswerB = findViewById(R.id.txtAnswerB)
         txtAnswerC = findViewById(R.id.txtAnswerC)
         txtAnswerD = findViewById(R.id.txtAnswerD)
+
+        findViewById<ImageView>(R.id.btnClose).setOnClickListener {
+            finish()
+        }
 
         findViewById<TextView>(R.id.totalTerm).text = cardList.size.toString()
         textToSpeech = TextToSpeech(this, this)

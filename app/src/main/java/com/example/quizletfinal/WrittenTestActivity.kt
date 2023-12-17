@@ -8,6 +8,7 @@ import android.util.Log
 import android.view.KeyEvent
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.widget.addTextChangedListener
@@ -44,6 +45,10 @@ class WrittenTestActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         txtUserInput = findViewById(R.id.txtUserInput)
         btnSkip = findViewById(R.id.btnSkip)
         listLenght = findViewById(R.id.totalTerm)
+
+        findViewById<ImageView>(R.id.btnClose).setOnClickListener {
+            finish()
+        }
 
         listLenght.text = cardList.size.toString()
 
